@@ -3,11 +3,7 @@ package com.example.widgets_compose.widgets
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -17,15 +13,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.text.style.LineHeightStyle
 import com.example.widgets_compose.MainActivity
 import com.example.widgets_compose.R
-import com.example.widgets_compose.WidgetsViewModel
+import com.example.widgets_compose.SendMoneyViewModel
 import kotlinx.coroutines.launch
-import java.lang.reflect.Modifier
 
 @Composable
-fun ConfigSnackbar(activity: MainActivity, viewModel: WidgetsViewModel) {
+fun ConfigSnackbar(activity: MainActivity, viewModel: SendMoneyViewModel) {
 
     if (viewModel.settingsTimer.value!! < 4){ //Nº de veces que el contador se incrementa
         val scope = rememberCoroutineScope()

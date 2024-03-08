@@ -11,11 +11,11 @@ import com.example.widgets_compose.screens.app.HomeScreen
 import com.example.widgets_compose.screens.app.LocationScreen
 import com.example.widgets_compose.screens.app.SendScreen
 import com.example.widgets_compose.widgets.TopBar
-import com.example.widgets_compose.WidgetsViewModel
+import com.example.widgets_compose.SendMoneyViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun BaseScreen(viewModel: WidgetsViewModel, activity: ComponentActivity) {
+fun BaseScreen(viewModel: SendMoneyViewModel, activity: ComponentActivity) {
     if(viewModel.closingDialogue.value == true) ClosingDialogue(viewModel = viewModel, activity = activity)
     Scaffold(
         topBar = { TopBar(viewModel = viewModel, activity) },
@@ -23,7 +23,7 @@ fun BaseScreen(viewModel: WidgetsViewModel, activity: ComponentActivity) {
             if(viewModel.selectedHome.value == true) HomeScreen(viewModel, activity)
             else if (viewModel.selectedArrow.value == true) SendScreen()
             else if (viewModel.selectedPlace.value == true) LocationScreen()
-            else BuyScreen()
+            else BuyScreen(viewModel, activity)
 
         },
         bottomBar = { BottomBar(viewModel) },

@@ -3,10 +3,10 @@ package com.example.widgets_compose.screens.app
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -19,7 +19,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,16 +29,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.widgets_compose.R
 import com.example.widgets_compose.Transaction
-import com.example.widgets_compose.WidgetsViewModel
+import com.example.widgets_compose.SendMoneyViewModel
 import com.example.widgets_compose.ui.theme.Turquoise
 
 @Composable
- fun HomeScreen(viewModel: WidgetsViewModel, activity: ComponentActivity) {
+ fun HomeScreen(viewModel: SendMoneyViewModel, activity: ComponentActivity) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        //verticalArrangement = Arrangement.Center,
     ) {
         Image(
             painter = painterResource(R.mipmap.ic_launcher_foreground),
@@ -48,6 +48,14 @@ import com.example.widgets_compose.ui.theme.Turquoise
                 .fillMaxWidth()
                 .size(210.dp)
         )
+        Text(
+            text = viewModel.tokens.value.toString()  + " " + activity.getString(R.string.tokens_abreviation),
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold
+        )
+        
+        Spacer(modifier = Modifier.size(20.dp))
+
         if (viewModel.transactions.value?.isEmpty() == true) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -61,7 +69,7 @@ import com.example.widgets_compose.ui.theme.Turquoise
                 )
             }
         } else {
-            if (viewModel.transactions.value!!.size <= 4){
+            if (viewModel.transactions.value!!.size <= 3){
                 Column {
                     var i = 0
                     while(i < viewModel.transactions.value?.size!!){
@@ -73,10 +81,10 @@ import com.example.widgets_compose.ui.theme.Turquoise
             else{
                 LazyColumn(
                     modifier = Modifier
-                        .heightIn(max = 350.dp)
+                        .heightIn(max = 300.dp) //Provar a ver
                 ) {
                     val itemsToShow = if (viewModel.expanded.value!!)
-                        viewModel.transactions.value?.size else 4
+                        viewModel.transactions.value?.size else 3
                     if (itemsToShow != null) {
 
                         items(itemsToShow) { index ->
@@ -85,20 +93,22 @@ import com.example.widgets_compose.ui.theme.Turquoise
                         }
                     }
                 }
+
+                if (!viewModel.expanded.value!!) {
+                    Text(
+                        text = activity.getString(R.string.see_more),
+                        modifier = Modifier.clickable { viewModel.expand() }
+                    )
+                }
+                if(viewModel.expanded.value == true){
+                    Text(
+                        text = activity.getString(R.string.see_less),
+                        modifier = Modifier.clickable { viewModel.shrink()}
+                    )
+                }
             }
         }
-        if (!viewModel.expanded.value!!) {
-            Text(
-                text = activity.getString(R.string.see_more),
-                modifier = Modifier.clickable { viewModel.expand() }
-            )
-        }
-        if(viewModel.expanded.value == true){
-            Text(
-                text = activity.getString(R.string.see_less),
-                modifier = Modifier.clickable { viewModel.shrink()}
-            )
-        }
+
     }
 }
 

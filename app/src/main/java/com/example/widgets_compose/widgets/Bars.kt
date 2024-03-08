@@ -24,13 +24,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.widgets_compose.WidgetsViewModel
+import com.example.widgets_compose.SendMoneyViewModel
 import com.example.widgets_compose.backAction
 import com.example.widgets_compose.ui.theme.Turquoise
 
 
 @Composable
- fun BottomBar(viewModel: WidgetsViewModel) {
+ fun BottomBar(viewModel: SendMoneyViewModel) {
     BottomAppBar(
         containerColor = Turquoise,
         modifier = Modifier.height(64.dp)
@@ -99,7 +99,7 @@ import com.example.widgets_compose.ui.theme.Turquoise
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(viewModel: WidgetsViewModel, activity: ComponentActivity){
+fun TopBar(viewModel: SendMoneyViewModel, activity: ComponentActivity){
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Turquoise),

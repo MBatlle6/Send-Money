@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.time.LocalDate
 
-class WidgetsViewModel: ViewModel() {
+class SendMoneyViewModel: ViewModel() {
 
 
     val selectedHome = MutableLiveData<Boolean>(true)
@@ -17,22 +17,54 @@ class WidgetsViewModel: ViewModel() {
     val okSnackBar = MutableLiveData<Boolean>(false)
     val startApp = MutableLiveData<Boolean>(false)
     val settingsTimer = MutableLiveData<Int>(0)
+    val tokens = MutableLiveData<Int>(100)
+    val tokens_to_buy = MutableLiveData<Int>(0)
+    val tokens_to_sell = MutableLiveData<Int>(0)
+    val valid_tokens_to_buy = MutableLiveData<Boolean>(true)
+    val valid_tokens_to_sell = MutableLiveData<Boolean>(true)
+    val buy_dialogue = MutableLiveData<Boolean>(false)
+    val sell_dialogue = MutableLiveData<Boolean>(false)
+
     val transactions = MutableLiveData<List<Transaction>>(listOf(
-        Transaction("Yo", "Juan", LocalDate.now(), 100.0),
-        Transaction("Pedro", "Yo", LocalDate.now(), 50.0),
-        Transaction("Yo", "María", LocalDate.now(), 75.0),
-        Transaction("Yo", "Luis", LocalDate.now(), 120.0),
-        Transaction("Él", "Yo", LocalDate.now(), 200.0),
-        Transaction("Yo", "Juan", LocalDate.now(), 100.0),
-        Transaction("Pedro", "Yo", LocalDate.now(), 50.0),
-        Transaction("Yo", "María", LocalDate.now(), 75.0),
-        Transaction("Yo", "Luis", LocalDate.now(), 120.0),
-        Transaction("Él", "Yo", LocalDate.now(), 200.0),
-        Transaction("Yo", "Juan", LocalDate.now(), 100.0),
-        Transaction("Pedro", "Yo", LocalDate.now(), 50.0),
-        Transaction("Yo", "María", LocalDate.now(), 75.0),
-        Transaction("Yo", "Luis", LocalDate.now(), 120.0),
+        Transaction("Yo", "Juan", LocalDate.now(), 100),
+        Transaction("Pedro", "Yo", LocalDate.now(), 50),
+        Transaction("Yo", "María", LocalDate.now(), 75),
+        Transaction("Yo", "Luis", LocalDate.now(), 120),
+        Transaction("Él", "Yo", LocalDate.now(), 200),
+        Transaction("Yo", "Juan", LocalDate.now(), 100),
+        Transaction("Pedro", "Yo", LocalDate.now(), 50),
+        Transaction("Yo", "María", LocalDate.now(), 75),
+        Transaction("Yo", "Luis", LocalDate.now(), 120),
+        Transaction("Él", "Yo", LocalDate.now(), 200),
+        Transaction("Yo", "Juan", LocalDate.now(), 100),
+        Transaction("Pedro", "Yo", LocalDate.now(), 50),
+        Transaction("Yo", "María", LocalDate.now(), 75),
+        Transaction("Yo", "Luis", LocalDate.now(), 120),
     ))
+
+
+    fun showBuyDialogue(show: Boolean){
+        buy_dialogue.value = show
+    }
+    fun showSellDialogue(show: Boolean){
+        sell_dialogue.value = show
+    }
+    fun changeValidityTokensToSell(valid : Boolean){
+        valid_tokens_to_sell.value = valid
+    }
+
+    fun changeValidityTokensToBuy(valid : Boolean){
+        valid_tokens_to_buy.value = valid
+    }
+
+
+    fun setTokensToBuy(tokens_amount : Int){
+        tokens_to_buy.value = tokens_amount
+    }
+
+    fun setTokensToSell(tokens_amount : Int){
+        tokens_to_sell.value = tokens_amount
+    }
 
 
     fun add1SettingsTimer(){

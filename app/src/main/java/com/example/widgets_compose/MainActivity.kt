@@ -13,7 +13,6 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
@@ -26,8 +25,7 @@ import com.example.widgets_compose.widgets.OkSnackbar
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<WidgetsViewModel>()
-    private var settings = false
+    private val viewModel by viewModels<SendMoneyViewModel>()
     private lateinit var locationPermissionLauncher: ActivityResultLauncher<Array<String>>
 
     private val onBackPressedCallback = object : OnBackPressedCallback(true){  //Gestionar cuanda el user hace return
@@ -73,6 +71,15 @@ class MainActivity : ComponentActivity() {
             viewModel.configSnackBar.observeAsState().value
             viewModel.okSnackBar.observeAsState().value
             viewModel.startApp.observeAsState().value
+            viewModel.tokens.observeAsState().value
+            viewModel.tokens_to_buy.observeAsState().value
+            viewModel.tokens_to_sell.observeAsState().value
+            viewModel.valid_tokens_to_buy.observeAsState().value
+            viewModel.valid_tokens_to_sell.observeAsState().value
+            viewModel.buy_dialogue.observeAsState().value
+            viewModel.sell_dialogue.observeAsState().value
+
+
 
             Widgets_ComposeTheme {
                 // A surface container using the 'background' color from the theme
@@ -88,8 +95,6 @@ class MainActivity : ComponentActivity() {
                         else if(viewModel.configSnackBar.value == true){
                             ConfigSnackbar(activity = this,viewModel)
                         }
-                        Text(text = "No hi ha permissos")
-
                     }
                     else{
                         BaseScreen(viewModel = viewModel, this)
@@ -138,7 +143,7 @@ class MainActivity : ComponentActivity() {
 
 }
 
-fun backAction(viewModel: WidgetsViewModel){
+fun backAction(viewModel: SendMoneyViewModel){
     if (viewModel.selectedHome.value == true){
         viewModel.showClosingDialogue()
     }
