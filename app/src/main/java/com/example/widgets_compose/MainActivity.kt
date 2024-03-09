@@ -38,8 +38,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        calculateTokens(viewModel, this)
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
-
         locationPermissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permission ->

@@ -17,7 +17,7 @@ class SendMoneyViewModel: ViewModel() {
     val okSnackBar = MutableLiveData<Boolean>(false)
     val startApp = MutableLiveData<Boolean>(false)
     val settingsTimer = MutableLiveData<Int>(0)
-    val tokens = MutableLiveData<Int>(100)
+    val tokens = MutableLiveData<Int>(0)
     val tokens_to_buy = MutableLiveData<Int>(0)
     val tokens_to_sell = MutableLiveData<Int>(0)
     val valid_tokens_to_buy = MutableLiveData<Boolean>(true)
@@ -25,22 +25,25 @@ class SendMoneyViewModel: ViewModel() {
     val buy_dialogue = MutableLiveData<Boolean>(false)
     val sell_dialogue = MutableLiveData<Boolean>(false)
 
-    val transactions = MutableLiveData<List<Transaction>>(listOf(
-        Transaction("Yo", "Juan", LocalDate.now(), 100),
-        Transaction("Pedro", "Yo", LocalDate.now(), 50),
-        Transaction("Yo", "María", LocalDate.now(), 75),
-        Transaction("Yo", "Luis", LocalDate.now(), 120),
-        Transaction("Él", "Yo", LocalDate.now(), 200),
-        Transaction("Yo", "Juan", LocalDate.now(), 100),
-        Transaction("Pedro", "Yo", LocalDate.now(), 50),
-        Transaction("Yo", "María", LocalDate.now(), 75),
-        Transaction("Yo", "Luis", LocalDate.now(), 120),
-        Transaction("Él", "Yo", LocalDate.now(), 200),
-        Transaction("Yo", "Juan", LocalDate.now(), 100),
-        Transaction("Pedro", "Yo", LocalDate.now(), 50),
-        Transaction("Yo", "María", LocalDate.now(), 75),
-        Transaction("Yo", "Luis", LocalDate.now(), 120),
-    ))
+    val transactions = MutableLiveData<MutableList<Transaction>>(
+        mutableListOf(
+        Transaction("Me", "Juan", LocalDate.now(), 100),
+        Transaction("Pedro", "Me", LocalDate.now(), 50),
+        Transaction("Me", "María", LocalDate.now(), 75),
+        Transaction("Me", "Luis", LocalDate.now(), 120),
+        Transaction("Él", "Me", LocalDate.now(), 200),
+
+    )
+    )
+
+
+    fun setTokens(amount : Int){
+        tokens.value = amount
+    }
+
+    fun addTransaction(transaction: Transaction){
+        transactions.value!!.add(0,transaction)
+    }
 
 
     fun showBuyDialogue(show: Boolean){

@@ -22,10 +22,12 @@
     <string name="tokens_abreviation">Tks</string>
     <string name="buy_tokens_request">Do you want to buy</string>
     <string name="sell_tokens_request">Do you want to sell</string>
-    <string name="tokens">tokens</string>
+    <string name="tokens">tokens?</string>
     <string name="buy">Buy</string>
     <string name="sell">Sell</string>
     <string name="go_back">Go Back</string>
+    <string name="me">Me</string>
+    <string name="bank">Bank</string>
 
 
 </resources>

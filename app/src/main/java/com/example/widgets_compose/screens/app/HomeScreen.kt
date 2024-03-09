@@ -73,7 +73,7 @@ import com.example.widgets_compose.ui.theme.Turquoise
                 Column {
                     var i = 0
                     while(i < viewModel.transactions.value?.size!!){
-                        TransactionItem(transaction = viewModel.transactions.value!!.get(i))
+                        TransactionItem(transaction = viewModel.transactions.value!![i], activity)
                         i++
                     }
                 }
@@ -88,8 +88,11 @@ import com.example.widgets_compose.ui.theme.Turquoise
                     if (itemsToShow != null) {
 
                         items(itemsToShow) { index ->
-                            val transaction = viewModel.transactions.value?.get(index)
-                            transaction?.let { TransactionItem(transaction = it) }
+                            val transaction = viewModel.transactions.value!![index]
+                            transaction.let { TransactionItem(
+                                transaction = it,
+                                activity = activity
+                            ) }
                         }
                     }
                 }
@@ -114,10 +117,10 @@ import com.example.widgets_compose.ui.theme.Turquoise
 
 
 @Composable
-fun TransactionItem(transaction: Transaction) {
+fun TransactionItem(transaction: Transaction, activity: ComponentActivity) {
     //val isSent = transaction.SENDER == Firebase.auth.currentUser?.email   #Para el Firebase (No borrar)
     val isSent: Boolean
-    if (transaction.SENDER == "Yo") isSent = true else isSent= false
+    if (transaction.SENDER == activity.getString(R.string.me)) isSent = true else isSent= false
     val sign = if (isSent) "-" else "+"
     val signColor = if (isSent) Color.Red else Turquoise
     val arrowIcon = if (isSent) Icons.AutoMirrored.Filled.ArrowBack else Icons.AutoMirrored.Filled.ArrowForward

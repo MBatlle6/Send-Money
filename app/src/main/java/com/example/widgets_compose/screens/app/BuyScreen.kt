@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.widgets_compose.MainActivity
 import com.example.widgets_compose.SendMoneyViewModel
 import com.example.widgets_compose.widgets.TokensToBuyWrittingButton
 import com.example.widgets_compose.R
@@ -27,7 +28,7 @@ import com.example.widgets_compose.widgets.TokensToSellWrittingButton
 
 //@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun BuyScreen(viewModel: SendMoneyViewModel, activity: ComponentActivity) {
+fun BuyScreen(viewModel: SendMoneyViewModel, activity: MainActivity) {
     if (viewModel.buy_dialogue.value!!){
         BuyDialogue(viewModel = viewModel, activity = activity)
     }
@@ -46,7 +47,7 @@ fun BuyScreen(viewModel: SendMoneyViewModel, activity: ComponentActivity) {
             Icon(
                 Icons.Filled.ShoppingCart,
                 contentDescription = "Shopping cart",
-                modifier = Modifier.size(40.dp)
+                modifier = Modifier.size(32.dp)
             )
 
         Spacer(modifier = Modifier.size(30.dp))
