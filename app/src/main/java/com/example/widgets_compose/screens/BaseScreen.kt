@@ -1,7 +1,6 @@
 package com.example.widgets_compose.screens
 
 import android.annotation.SuppressLint
-import androidx.activity.ComponentActivity
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import com.example.widgets_compose.MainActivity
@@ -22,7 +21,7 @@ fun BaseScreen(viewModel: SendMoneyViewModel, activity: MainActivity) {
         topBar = { TopBar(viewModel = viewModel, activity) },
         content = {
             if(viewModel.selectedHome.value == true) HomeScreen(viewModel, activity)
-            else if (viewModel.selectedArrow.value == true) SendScreen()
+            else if (viewModel.selectedArrow.value == true) SendScreen(viewModel, activity)
             else if (viewModel.selectedPlace.value == true) LocationScreen()
             else BuyScreen(viewModel, activity)
 

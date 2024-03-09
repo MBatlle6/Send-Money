@@ -102,3 +102,38 @@ fun SellDialogue(viewModel: SendMoneyViewModel, activity: MainActivity){
 
         )
 }
+
+@Composable
+fun SendDialogue(viewModel: SendMoneyViewModel, activity: MainActivity){
+    AlertDialog(
+        onDismissRequest = { viewModel.showSendDialogue(false) },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    viewModel.showSendDialogue(false)
+                    viewModel.addTransaction(
+                        Transaction(activity.getString(R.string.me), viewModel.recipient.value!!,
+                            LocalDate.now(), viewModel.tokens_to_send.value!!)
+                    )
+                    viewModel.setTokens(viewModel.tokens.value!! - viewModel.tokens_to_send.value!!)
+                    viewModel.setTokensToSend(0)
+                    viewModel.setRecipient("")
+                    backAction(viewModel)
+                }
+            )
+            {
+                Text(text = activity.getString(R.string.send))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = {viewModel.showSendDialogue(false)}) {
+                Text(text = activity.getString(R.string.go_back))
+            }
+        },
+        title = { Text(text = activity.getString(R.string.send_tokens) )},
+        text = { Text(text = activity.getString(R.string.transaction_request_1st_part)+ " " + activity.getString(R.string.to) + " "
+                + viewModel.recipient.value + " "
+                + viewModel.tokens_to_send.value.toString() +" "+ activity.getString(R.string.tokens)) },
+
+        )
+}

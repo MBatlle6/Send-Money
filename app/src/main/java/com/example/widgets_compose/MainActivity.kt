@@ -74,10 +74,16 @@ class MainActivity : ComponentActivity() {
             viewModel.tokens.observeAsState().value
             viewModel.tokens_to_buy.observeAsState().value
             viewModel.tokens_to_sell.observeAsState().value
+            viewModel.tokens_to_send.observeAsState().value
             viewModel.valid_tokens_to_buy.observeAsState().value
             viewModel.valid_tokens_to_sell.observeAsState().value
+            viewModel.valid_tokens_to_send.observeAsState().value
             viewModel.buy_dialogue.observeAsState().value
             viewModel.sell_dialogue.observeAsState().value
+            viewModel.send_dialogue.observeAsState().value
+            viewModel.recipient.observeAsState().value
+            viewModel.valid_recipient.observeAsState().value
+            viewModel.recipient.observeAsState().value
 
 
 

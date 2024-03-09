@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
@@ -123,6 +125,89 @@ fun SellTokensButton(label: String, viewModel: SendMoneyViewModel){
             }else{
                 viewModel.changeValidityTokensToSell(true)
                 viewModel.showSellDialogue(true)
+                //Sell Tokens
+            }
+        }
+    ) {
+        Text(
+            fontWeight = FontWeight.Bold,
+            text = label
+        )
+    }
+}
+
+
+@Composable
+fun RecipientWritingButton(label: String, viewModel: SendMoneyViewModel) {
+
+    OutlinedTextField(
+        //Afegir isError en la fase del Firebase
+        leadingIcon = {
+            Icon(imageVector = Icons.Filled.Email, contentDescription = "")
+        },
+        value = viewModel.recipient.value!!,
+        onValueChange = {
+            viewModel.setRecipient(it)
+        },
+        label = { Text(text = label) },
+        singleLine = true,
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Done
+        ),
+        modifier =
+        Modifier.padding(0.dp, 50.dp, 0.dp, 20.dp)
+            .fillMaxWidth(),
+        keyboardActions = KeyboardActions(onDone = { /* Acción al presionar "Done" en el teclado */ })
+    )
+}
+
+@Composable
+fun TokensToSendWrittingButton(label: String, viewModel: SendMoneyViewModel) {
+
+    OutlinedTextField(
+        isError = !viewModel.valid_tokens_to_send.value!!,
+        leadingIcon = {
+            Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = "")
+        },
+        value =
+        if(viewModel.tokens_to_send.value == 0){
+            ""
+        } else {
+            viewModel.tokens_to_send.value.toString()
+        },
+        onValueChange = {
+            if (!it.contains("[^0-9]".toRegex()) && it.length < 5  && it.isNotEmpty()) {
+                viewModel.setTokensToSend(it.toInt())
+            }
+            if (it.isEmpty()){
+                viewModel.setTokensToSend(0)
+            }
+        },
+        singleLine = true,
+        label = { Text(text = label) },
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = KeyboardType.Number,
+            imeAction = ImeAction.Done
+        ),
+        modifier = Modifier
+            .padding(0.dp, 20.dp, 0.dp, 50.dp)
+            .fillMaxWidth(),
+        keyboardActions = KeyboardActions(onDone = { /* Acción al presionar "Done" en el teclado */ })
+    )
+}
+
+
+@Composable
+fun SendTokensButton(label: String, viewModel: SendMoneyViewModel){
+    Button(
+        colors = ButtonDefaults.buttonColors(Turquoise),
+        onClick = {
+            if(viewModel.tokens_to_send.value == 0 || viewModel.tokens_to_send.value!! > viewModel.tokens.value!! ){
+                viewModel.changeValidityTokensToSend(false)
+            }else{
+                viewModel.changeValidityTokensToSend(true)
+                viewModel.showSendDialogue(true)
                 //Sell Tokens
             }
         }

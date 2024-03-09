@@ -1,5 +1,6 @@
 package com.example.widgets_compose
 
+import android.os.IBinder.DeathRecipient
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.time.LocalDate
@@ -24,18 +25,29 @@ class SendMoneyViewModel: ViewModel() {
     val valid_tokens_to_sell = MutableLiveData<Boolean>(true)
     val buy_dialogue = MutableLiveData<Boolean>(false)
     val sell_dialogue = MutableLiveData<Boolean>(false)
+    val send_dialogue = MutableLiveData<Boolean>(false)
+    val valid_tokens_to_send = MutableLiveData<Boolean>(true)
+    val tokens_to_send = MutableLiveData<Int>(0)
+    val recipient = MutableLiveData<String>("")
+    val valid_recipient = MutableLiveData<Boolean>(true)
 
     val transactions = MutableLiveData<MutableList<Transaction>>(
         mutableListOf(
         Transaction("Me", "Juan", LocalDate.now(), 100),
         Transaction("Pedro", "Me", LocalDate.now(), 50),
         Transaction("Me", "María", LocalDate.now(), 75),
-        Transaction("Me", "Luis", LocalDate.now(), 120),
+        Transaction("Luis", "Me", LocalDate.now(), 120),
         Transaction("Él", "Me", LocalDate.now(), 200),
 
     )
     )
 
+    fun setRecipient(recipienT: String){
+        recipient.value = recipienT
+    }
+    fun changeRecipientValidity(valid: Boolean){
+        valid_recipient.value = valid
+    }
 
     fun setTokens(amount : Int){
         tokens.value = amount
@@ -45,6 +57,17 @@ class SendMoneyViewModel: ViewModel() {
         transactions.value!!.add(0,transaction)
     }
 
+    fun showSendDialogue(show: Boolean){
+        send_dialogue.value = show
+    }
+
+    fun changeValidityTokensToSend(valid : Boolean){
+        valid_tokens_to_send.value = valid
+    }
+
+    fun setTokensToSend(tokens_amount : Int){
+        tokens_to_send.value = tokens_amount
+    }
 
     fun showBuyDialogue(show: Boolean){
         buy_dialogue.value = show

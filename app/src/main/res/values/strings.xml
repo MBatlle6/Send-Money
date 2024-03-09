@@ -28,6 +28,11 @@
     <string name="go_back">Go Back</string>
     <string name="me">Me</string>
     <string name="bank">Bank</string>
-
+    <string name="transaction_request_1st_part">Do you want to send</string>
+    <string name="to">to</string>
+    <string name="yes">Yes</string>
+    <string name="recipient_email">Recipient Email</string>
+    <string name="send">Send</string>
+    <string name="send_tokens">Send Tokens</string>
 
 </resources>
