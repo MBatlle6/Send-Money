@@ -1,6 +1,7 @@
 package com.example.widgets_compose.widgets
 
-import androidx.activity.ComponentActivity
+import android.content.Intent
+import android.provider.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -10,7 +11,6 @@ import com.example.widgets_compose.R
 import com.example.widgets_compose.SendMoneyViewModel
 import com.example.widgets_compose.Transaction
 import com.example.widgets_compose.backAction
-import com.example.widgets_compose.calculateTokens
 import java.time.LocalDate
 
 @Composable
@@ -136,4 +136,22 @@ fun SendDialogue(viewModel: SendMoneyViewModel, activity: MainActivity){
                 + viewModel.tokens_to_send.value.toString() +" "+ activity.getString(R.string.tokens)) },
 
         )
+}
+
+@Composable
+fun SettingsDialogue(activity: MainActivity, viewModel: SendMoneyViewModel){
+        AlertDialog(
+            onDismissRequest = {},
+            confirmButton = {
+                TextButton(onClick = {
+                    activity.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                    viewModel.showSettingsDialogue(false)
+                }) {
+                    Text(text = activity.getString(R.string.activateLocationSettings))
+                }
+            },
+            title = { Text(text = activity.getString(R.string.locationSettingsUnable)) },
+            text = { Text(text = activity.getString(R.string.pleaseActivateLoacationSettings)) },
+
+            )
 }

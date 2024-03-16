@@ -1,6 +1,5 @@
 package com.example.widgets_compose
 
-import android.os.IBinder.DeathRecipient
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.time.LocalDate
@@ -30,6 +29,9 @@ class SendMoneyViewModel: ViewModel() {
     val tokens_to_send = MutableLiveData<Int>(0)
     val recipient = MutableLiveData<String>("")
     val valid_recipient = MutableLiveData<Boolean>(true)
+    val userLatitude = MutableLiveData<Double>(0.0)
+    val userLongitude = MutableLiveData<Double>(0.0)
+    val settingsDialogue = MutableLiveData(false)
 
     val transactions = MutableLiveData<MutableList<Transaction>>(
         mutableListOf(
@@ -41,6 +43,18 @@ class SendMoneyViewModel: ViewModel() {
 
     )
     )
+
+    fun showSettingsDialogue(show : Boolean){
+        send_dialogue.value = show
+    }
+
+    fun setUserLongitude(longitude : Double){
+        userLongitude.value = longitude
+    }
+
+    fun setUserLatitude(latitude : Double){
+        userLatitude.value = latitude
+    }
 
     fun setRecipient(recipienT: String){
         recipient.value = recipienT

@@ -2,6 +2,8 @@ package com.example.widgets_compose
 
 import android.Manifest
 import android.content.ContentValues.TAG
+import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -20,11 +22,19 @@ import com.example.widgets_compose.screens.BaseScreen
 import com.example.widgets_compose.ui.theme.Widgets_ComposeTheme
 import com.example.widgets_compose.widgets.ConfigSnackbar
 import com.example.widgets_compose.widgets.OkSnackbar
+import com.example.widgets_compose.widgets.SettingsDialogue
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import android.widget.Toast
 
 //Commit de prova
 
 class MainActivity : ComponentActivity() {
 
+
+
+    lateinit var mFusedLocationClient : FusedLocationProviderClient
+    lateinit var locationManager : LocationManager
     private val viewModel by viewModels<SendMoneyViewModel>()
     private lateinit var locationPermissionLauncher: ActivityResultLauncher<Array<String>>
 
@@ -38,6 +48,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         calculateTokens(viewModel, this)
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
         locationPermissionLauncher = registerForActivityResult(
@@ -60,6 +75,9 @@ class MainActivity : ComponentActivity() {
 
     public override fun onStart() {
         super.onStart()
+
+        //S'hauria de ficar al onCreate() els observeAsState()
+
         setContent {
             viewModel.selectedHome.observeAsState().value
             viewModel.selectedPlace.observeAsState().value
@@ -84,6 +102,8 @@ class MainActivity : ComponentActivity() {
             viewModel.recipient.observeAsState().value
             viewModel.valid_recipient.observeAsState().value
             viewModel.recipient.observeAsState().value
+            viewModel.userLatitude.observeAsState().value
+            viewModel.userLongitude.observeAsState().value
 
 
 
@@ -103,6 +123,28 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                     else{
+                        if(ActivityCompat.checkSelfPermission(
+                                this,
+                                Manifest.permission.ACCESS_FINE_LOCATION
+                            ) == PackageManager.PERMISSION_GRANTED)
+                        {
+                            if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+                                SettingsDialogue(activity = this, viewModel = viewModel)
+                            }
+                            else{
+                                GetFineLocation(this, mFusedLocationClient, viewModel)
+                            }
+
+                        }
+                        else{
+                            if(!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+                                SettingsDialogue(activity = this, viewModel = viewModel)
+                            }
+                            else{
+                                GetCoarseLocation(this, mFusedLocationClient, viewModel)
+                            }
+
+                        }
                         BaseScreen(viewModel = viewModel, this)
                     }
                 }
@@ -111,13 +153,17 @@ class MainActivity : ComponentActivity() {
     }
 
 
-    fun startLocationPermissionRequest(){
+    private fun startLocationPermissionRequest(){
         locationPermissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
                                                   Manifest.permission.ACCESS_COARSE_LOCATION))
     }
 
 
-    fun requestPermissions() {
+
+
+
+
+    private fun requestPermissions() {
         val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(
             this,
             Manifest.permission.ACCESS_COARSE_LOCATION

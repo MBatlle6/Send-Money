@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 
+
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -16,6 +18,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Widgets_Compose"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyD9I078WpI1X7ykUCrvJ5wYcd1FxwO40h4" />
+
         <activity
             android:screenOrientation="portrait"
             android:name=".MainActivity"
@@ -24,7 +31,6 @@
             tools:ignore="DiscouragedApi,LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
