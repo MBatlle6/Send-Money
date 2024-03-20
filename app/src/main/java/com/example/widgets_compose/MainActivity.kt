@@ -26,13 +26,16 @@ import com.example.widgets_compose.widgets.SettingsDialogue
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 
 //Commit de prova
 
 class MainActivity : ComponentActivity() {
 
 
-
+    private lateinit var networkStateMonitor: NetworkStateMonitor
+    private lateinit var networkState: LiveData<Boolean>
     lateinit var mFusedLocationClient : FusedLocationProviderClient
     lateinit var locationManager : LocationManager
     private val viewModel by viewModels<SendMoneyViewModel>()
@@ -48,9 +51,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
-
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         calculateTokens(viewModel, this)
@@ -70,6 +70,8 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        networkStateMonitor = NetworkStateMonitor(this, viewModel)
     }
 
 
@@ -152,15 +154,15 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        networkStateMonitor.unregister()
+    }
 
     private fun startLocationPermissionRequest(){
         locationPermissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
                                                   Manifest.permission.ACCESS_COARSE_LOCATION))
     }
-
-
-
-
 
 
     private fun requestPermissions() {
