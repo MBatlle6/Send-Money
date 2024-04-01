@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="closing_app_title">Salir</string>
+    <string name="closing_app">¿Desea salir de la aplicación?</string>
+    <string name="remain">Permanecer</string>
+    <string name="see_more">Ver más</string>
+    <string name="see_less">Ver menos</string>
+    <string name="there_not_transactions">No hay transacciones</string>
+    <string name="no_location_detected">"  No se detectó ubicación. Asegúrese de que la ubicación esté activada en el dispositivo."</string>
+    <string name="permission_rationale">Se necesita permiso de ubicación para la funcionalidad principal.</string>
+    <string name="permission_denied_explanation">Se denegó el permiso, pero se necesita para la funcionalidad principal.</string>
+    <string name="settings">Ajustes</string>
+    <string name="app_id">com.example.widgets_compose</string>
+    <string name="advice">Consejo.</string>
+    <string name="buy_tokens">Comprar tokens</string>
+    <string name="sell_tokens">Vender tokens</string>
+    <string name="tokens_abreviation">Tks</string>
+    <string name="buy_tokens_request">Desea comprar</string>
+    <string name="sell_tokens_request">Desea vender</string>
+    <string name="tokens">tokens?</string>
+    <string name="buy">Comprar</string>
+    <string name="sell">Vender</string>
+    <string name="go_back">Volver</string>
+    <string name="me">Yo</string>
+    <string name="bank">Banco</string>
+    <string name="transaction_request_1st_part">Desea enviar</string>
+    <string name="to">a</string>
+    <string name="yes">Sí</string>
+    <string name="recipient_email">Correo Electrónico del destinatario</string>
+    <string name="send">Enviar</string>
+    <string name="send_tokens">Enviar tokens</string>
+    <string name="locationSettingsUnable">Ajustes de ubicación no disponibles.</string>
+    <string name="pleaseActivateLoacationSettings">Por favor, active la configuración de ubicación en su dispositivo.</string>
+    <string name="activateLocationSettings">Activar Configuración de Ubicación.</string>
+    <string name="myLocation">Mi ubicación.</string>
+    <string name="noNetworkConnection">No hay conexión de red</string>
+</resources>
