@@ -25,7 +25,10 @@ fun BaseScreen(
     Scaffold(
         topBar = { TopBar(viewModel = viewModel, activity) },
         content = {
-            if(viewModel.selectedHome.value == true) HomeScreen(viewModel, activity)
+            if(viewModel.selectedHome.value == true){
+                viewModel.getTransaction()
+                HomeScreen(viewModel, activity)
+            }
             else if (viewModel.selectedArrow.value == true) SendScreen(viewModel, activity)
             else if (viewModel.selectedPlace.value == true) LocationScreen(viewModel, activity)
             else BuyScreen(viewModel, activity)

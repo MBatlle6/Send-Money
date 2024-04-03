@@ -111,6 +111,7 @@ fun BuyTokensButton(label: String, viewModel: SendMoneyViewModel){
             }else{
                 viewModel.changeValidityTokensToBuy(true)
                 viewModel.showBuyDialogue(true)
+                print("Buy Tokens")
                 //Buy Tokens
             }
         }

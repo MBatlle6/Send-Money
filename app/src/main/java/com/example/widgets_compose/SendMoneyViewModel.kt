@@ -2,7 +2,6 @@ package com.example.widgets_compose
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import java.time.LocalDate
 
 class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesData): ViewModel() {
 
@@ -37,6 +36,11 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
         mutableListOf()
     )
 
+
+    fun getTransaction() {
+        transactions.value = sharedPreferencesData.getTransactions(transactions.value!!)
+    }
+
     fun showSettingsDialogue(show : Boolean){
         send_dialogue.value = show
     }
@@ -58,10 +62,12 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
 
     fun getTokens() : Int{
         return sharedPreferencesData.getTokens()
+
     }
 
     fun setTokens(amount : Int){
-        sharedPreferencesData.saveTokens(amount)
+        sharedPreferencesData.saveTokens(amount, transactions.value!!)
+
     }
 
     fun addTransaction(transaction: Transaction){
