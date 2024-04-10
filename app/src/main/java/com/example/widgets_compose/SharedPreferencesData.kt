@@ -25,6 +25,7 @@ class SharedPreferencesData private constructor(context: Context) {
     }
 
 
+
     fun getTransactions(values: MutableList<Transaction>): MutableList<Transaction> {
         val json = sharedPreferencesTranscations.getString("transactions", "")
         return if (json != "") {

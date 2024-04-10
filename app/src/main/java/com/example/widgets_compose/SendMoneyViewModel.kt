@@ -39,6 +39,7 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
 
     fun getTransaction() {
         transactions.value = sharedPreferencesData.getTransactions(transactions.value!!)
+        //El problema està aquí!!
     }
 
     fun showSettingsDialogue(show : Boolean){
@@ -61,11 +62,13 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     }
 
     fun getTokens() : Int{
-        return sharedPreferencesData.getTokens()
+        return tokens.value!!
+    //return sharedPreferencesData.getTokens()
 
     }
 
     fun setTokens(amount : Int){
+        tokens.value = amount
         sharedPreferencesData.saveTokens(amount, transactions.value!!)
 
     }
