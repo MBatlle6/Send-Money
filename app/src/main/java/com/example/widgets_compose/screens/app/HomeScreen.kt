@@ -153,6 +153,7 @@ fun TransactionItem(transaction: Transaction, activity: ComponentActivity) {
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
+            /*
             Text(
                 text = transaction.DATE.toString(),
                 fontSize = 14.sp,
@@ -160,6 +161,7 @@ fun TransactionItem(transaction: Transaction, activity: ComponentActivity) {
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
+            */
         }
         Text(
             text = "$sign${transaction.AMOUNT}",

@@ -62,13 +62,13 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     }
 
     fun getTokens() : Int{
-        return tokens.value!!
-    //return sharedPreferencesData.getTokens()
+        //return tokens.value!!
+        return sharedPreferencesData.getTokens()
 
     }
 
     fun setTokens(amount : Int){
-        tokens.value = amount
+        //tokens.value = amount
         sharedPreferencesData.saveTokens(amount, transactions.value!!)
 
     }
