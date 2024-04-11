@@ -119,6 +119,21 @@ fun TopBar(viewModel: SendMoneyViewModel, activity: ComponentActivity){
                 )
             }
         },
+        actions = {
+            IconButton(
+                onClick = {
+                    viewModel.unSelectEverything()
+                    viewModel.selectSettings()
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Settings,
+                    contentDescription = "Settings",
+                    modifier = Modifier.size(32.dp),
+                    tint = Color.White
+                )
+            }
+        },
     )
 }
 

@@ -116,6 +116,7 @@ class MainActivity : ComponentActivity() {
             viewModel.recipient.observeAsState().value
             viewModel.userLatitude.observeAsState().value
             viewModel.userLongitude.observeAsState().value
+            viewModel.allowAllConnections.observeAsState().value
 
 
 

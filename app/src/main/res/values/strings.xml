@@ -42,5 +42,11 @@
     <string name="myLocation">My Location</string>
     <string name="noNetworkConnection">No network connection</string>
     <string name="pleaseActivateConnection">Please connect to the internet to continue</string>
+    <string name="network">Network</string>
+    <string name="allowAllConnections">Allow all connections</string>
+    <string name="justWifi">Just allow wifi</string>
+    <string name="wifiConnected">Wifi connected!</string>
+    <string name="mobileConnected">Mobile connected!</string>
+    <string name="wrongSharedPreferences">No coincidences with user preferences!!</string>
 
 </resources>

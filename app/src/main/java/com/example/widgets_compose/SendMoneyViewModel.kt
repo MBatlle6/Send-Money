@@ -10,6 +10,7 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     val selectedArrow = MutableLiveData<Boolean>(false)
     val selectedBuy = MutableLiveData<Boolean>(false)
     val selectedPlace = MutableLiveData<Boolean>(false)
+    val selectedSettings = MutableLiveData<Boolean>(false)
     val closingDialogue = MutableLiveData<Boolean>(false)
     val expanded = MutableLiveData<Boolean>(false)
     val configSnackBar = MutableLiveData<Boolean>(false)
@@ -31,10 +32,16 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     val userLatitude = MutableLiveData<Double>(0.0)
     val userLongitude = MutableLiveData<Double>(0.0)
     val settingsDialogue = MutableLiveData(false)
+    val allowAllConnections = MutableLiveData(false)
 
     val transactions = MutableLiveData<MutableList<Transaction>>(
         mutableListOf()
     )
+
+
+    fun setAllowAllConnections(allow: Boolean){
+        allowAllConnections.value = allow
+    }
 
 
     fun getTransaction() {
@@ -122,8 +129,12 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
         selectedArrow.value = false
         selectedBuy.value = false
         selectedPlace.value = false
+        selectedSettings.value = false
         }
 
+    fun selectSettings(){
+        selectedSettings.value = true
+    }
     fun selectHome(){
         selectedHome.value = true
     }
