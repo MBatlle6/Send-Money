@@ -3,6 +3,7 @@ package com.example.widgets_compose
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Base64
+import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
@@ -13,8 +14,10 @@ class SharedPreferencesData private constructor(context: Context) {
 
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences("tokens", Context.MODE_PRIVATE)
     private val sharedPreferencesTranscations: SharedPreferences = context.getSharedPreferences("transactions", Context.MODE_PRIVATE)
+    private val sharedPreferencesConections: SharedPreferences = context.getSharedPreferences("connections", Context.MODE_PRIVATE)
     private val gson = Gson()
     private val key = "rK4!T[+!m}2x@e6Z3Fz9nQV5wA7p*Ju" // Clave de 256 bits (32 bytes) en formato String
+    private val  allowedConnections = MutableLiveData(false)
 
     fun saveTokens(amount: Int, values: MutableList<Transaction>) {
         val currentTokens = sharedPreferences.getInt(TOKENS_KEY, 0)
@@ -59,10 +62,15 @@ class SharedPreferencesData private constructor(context: Context) {
         val currentTokens = sharedPreferences.getInt(TOKENS_KEY, 0) // Obtener el valor actual de tokens
         val newTokens = currentTokens - amount // Restar el valor actual con el nuevo valor
         sharedPreferences.edit().putInt(TOKENS_KEY, newTokens).apply()
-
     }
 
+    fun setConnections(allow: Boolean){
+        sharedPreferencesConections.edit().putBoolean("connections", allow).apply()
+    }
 
+    fun getConnections(): Boolean {
+        return sharedPreferencesConections.getBoolean("connections", false)
+    }
 
 
     companion object {

@@ -2,7 +2,6 @@ package com.example.widgets_compose
 
 import SendMoneyViewModelFactory
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
 import android.location.LocationManager
@@ -20,6 +19,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.LiveData
 import com.example.widgets_compose.screens.BaseScreen
 import com.example.widgets_compose.ui.theme.Widgets_ComposeTheme
 import com.example.widgets_compose.widgets.ConfigSnackbar
@@ -27,8 +27,6 @@ import com.example.widgets_compose.widgets.OkSnackbar
 import com.example.widgets_compose.widgets.SettingsDialogue
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import androidx.lifecycle.LiveData
-import java.util.Locale
 
 
 class MainActivity : ComponentActivity() {
@@ -48,7 +46,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private val viewModel: SendMoneyViewModel by viewModels {
-        SendMoneyViewModelFactory(sharedPreferencesData)
+        SendMoneyViewModelFactory(sharedPreferencesData, sharedPreferencesData)
     }
 
     private val onBackPressedCallback = object : OnBackPressedCallback(true){  //Gestionar cuanda el user hace return
@@ -60,6 +58,7 @@ class MainActivity : ComponentActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        viewModel.getAllowAllConnections()
         super.onCreate(savedInstanceState)
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
@@ -117,6 +116,7 @@ class MainActivity : ComponentActivity() {
             viewModel.userLatitude.observeAsState().value
             viewModel.userLongitude.observeAsState().value
             viewModel.allowAllConnections.observeAsState().value
+
 
 
 

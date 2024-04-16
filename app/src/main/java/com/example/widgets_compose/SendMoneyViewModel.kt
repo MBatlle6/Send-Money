@@ -3,7 +3,7 @@ package com.example.widgets_compose
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesData): ViewModel() {
+class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesData, private val sharedPreferencesConnection:SharedPreferencesData ): ViewModel() {
 
 
     val selectedHome = MutableLiveData<Boolean>(true)
@@ -41,6 +41,11 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
 
     fun setAllowAllConnections(allow: Boolean){
         allowAllConnections.value = allow
+        sharedPreferencesConnection.setConnections(allowAllConnections.value!!)
+    }
+
+    fun getAllowAllConnections(){
+        allowAllConnections.value = sharedPreferencesConnection.getConnections()
     }
 
 
