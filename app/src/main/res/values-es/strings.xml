@@ -33,7 +33,7 @@
     <string name="pleaseActivateLoacationSettings">Por favor, active la configuración de ubicación en su dispositivo.</string>
     <string name="activateLocationSettings">Activar Configuración de Ubicación.</string>
     <string name="myLocation">Mi ubicación.</string>
-    <string name="noNetworkConnection">No hay conexión de red</string>
+    <string name="noNetworkConnection">Conexión perdida</string>
     <string name="pleaseActivateConnection">Por favor, conectate a la red para continuar</string>
     <string name="network">Red</string>
     <string name="allowAllConnections">Permite todas las conexiones</string>
@@ -41,4 +41,5 @@
     <string name="wifiConnected">Wifi conectada!</string>
     <string name="mobileConnected">Datos móbiles conectados!</string>
     <string name="wrongSharedPreferences">No hay coincidencias con las preferencias del usuario!!</string>
+    <string name="restartApp">Reiniciar App</string>
 </resources>

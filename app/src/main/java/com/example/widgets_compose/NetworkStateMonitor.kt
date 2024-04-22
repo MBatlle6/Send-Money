@@ -8,11 +8,11 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
-import android.provider.Settings
 import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
+import kotlin.system.exitProcess
 
- class NetworkStateMonitor(private val context: Context, private val viewModel: SendMoneyViewModel) : ConnectivityManager.NetworkCallback() {
+class NetworkStateMonitor(private val context: Context, private val viewModel: SendMoneyViewModel) : ConnectivityManager.NetworkCallback() {
 
     private lateinit var noNetworkDialog: AlertDialog
     private lateinit var sharedPreferencesDialog: AlertDialog
@@ -43,53 +43,47 @@ import androidx.core.content.ContextCompat.startActivity
 
     override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
         super.onCapabilitiesChanged(network, networkCapabilities)
-        if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-            Toast.makeText(context,context.getString(R.string.wifiConnected),Toast.LENGTH_LONG).show()
-            //dismissSharedPreferencesDialog()
-        }
-        else{
-            Toast.makeText(context,context.getString(R.string.mobileConnected),Toast.LENGTH_LONG).show()
+        if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)){
             if (!viewModel.allowAllConnections.value!!){ //Linkar amb les shared preferences
-                Toast.makeText(context,context.getString(R.string.wrongSharedPreferences),Toast.LENGTH_LONG).show()
-                //showSharedPreferencesDialog()
+                showSharedPreferencesDialog()
             }
         }
     }
 
-    override fun onAvailable(network: Network) {
-        super.onAvailable(network)
-        dismissNoNetworkDialog()
-    }
-
     override fun onLost(network: Network) {
         super.onLost(network)
-        Toast.makeText(context,context.getString(R.string.noNetworkConnection),Toast.LENGTH_LONG).show()
-        //showNoNetworkDialog()
+        showNoNetworkDialog()
     }
 
     private fun showNoNetworkDialog() {
         val builder = AlertDialog.Builder(context)
             .setMessage(context.getString(R.string.pleaseActivateConnection))
             .setTitle(context.getString(R.string.noNetworkConnection))
+            .setPositiveButton(R.string.restartApp) { _: DialogInterface, _: Int ->
+                val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+                intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                context.startActivity(intent)
+                exitProcess(0)
+            }
+            .setCancelable(false)
 
         noNetworkDialog = builder.create()
-        noNetworkDialog.setCancelable(false)
         noNetworkDialog.show()
     }
 
     private fun showSharedPreferencesDialog() {
         val builder = AlertDialog.Builder(context)
             .setMessage(context.getString(R.string.wrongSharedPreferences))
+            .setPositiveButton(R.string.restartApp) { _: DialogInterface, _: Int ->
+                val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+                intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                context.startActivity(intent)
+                exitProcess(0)
+            }
+            .setCancelable(false)
 
         sharedPreferencesDialog = builder.create()
-        sharedPreferencesDialog.setCancelable(false)
         sharedPreferencesDialog.show()
-    }
-
-    private fun dismissNoNetworkDialog() {
-        if (::noNetworkDialog.isInitialized) {
-            noNetworkDialog.dismiss()
-        }
     }
 
     private fun dismissSharedPreferencesDialog() {
