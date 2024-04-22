@@ -1,5 +1,12 @@
 buildscript {
-    val agp_version by extra("8.2.2")
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath ("com.android.tools.build:gradle:7.1.3")
+        classpath ("com.google.gms:google-services:4.4.1") // Dependencia de servicios de Google
+    }
 }
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {

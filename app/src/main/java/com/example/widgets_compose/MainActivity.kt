@@ -3,6 +3,7 @@ package com.example.widgets_compose
 import SendMoneyViewModelFactory
 import android.Manifest
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -24,8 +25,10 @@ import com.example.widgets_compose.ui.theme.Widgets_ComposeTheme
 import com.example.widgets_compose.widgets.ConfigSnackbar
 import com.example.widgets_compose.widgets.OkSnackbar
 import com.example.widgets_compose.widgets.SettingsDialogue
+import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.auth.FirebaseAuth
 
 
 class MainActivity : ComponentActivity() {
@@ -35,6 +38,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var networkState: LiveData<Boolean>
     lateinit var mFusedLocationClient : FusedLocationProviderClient
     private lateinit var locationPermissionLauncher: ActivityResultLauncher<Array<String>>
+    private lateinit var signInLauncher: ActivityResultLauncher<Intent>
 
 
 
@@ -78,6 +82,12 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        signInLauncher = registerForActivityResult(
+            FirebaseAuthUIActivityResultContract()
+        ) { res ->
+            onSignInResult(res, this, viewModel)
+        }
+
         networkStateMonitor = NetworkStateMonitor(this, viewModel)
     }
 
@@ -115,7 +125,7 @@ class MainActivity : ComponentActivity() {
             viewModel.userLongitude.observeAsState().value
             viewModel.allowAllConnections.observeAsState().value
             viewModel.settingsDialogue.observeAsState().value
-
+            viewModel.isLogged.observeAsState().value
 
 
             Widgets_ComposeTheme {
@@ -143,7 +153,12 @@ class MainActivity : ComponentActivity() {
 
                         }
                         else GetCoarseLocation(this, mFusedLocationClient, viewModel)
-                        BaseScreen(viewModel = viewModel, this, sharedPreferencesData)
+                        if (!isAuthClient()){
+                            signInLauncher.launch(getAuthIntent())
+                        }
+                        else{
+                            BaseScreen(viewModel = viewModel, this, sharedPreferencesData)
+                        }
                     }
                 }
             }
@@ -203,6 +218,8 @@ fun backAction(viewModel: SendMoneyViewModel){
     }
 
 }
+
+
 
 
 

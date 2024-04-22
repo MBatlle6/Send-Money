@@ -17,7 +17,7 @@ class SharedPreferencesData private constructor(context: Context) {
     private val sharedPreferencesConections: SharedPreferences = context.getSharedPreferences("connections", Context.MODE_PRIVATE)
     private val gson = Gson()
     private val key = "rK4!T[+!m}2x@e6Z3Fz9nQV5wA7p*Ju" // Clave de 256 bits (32 bytes) en formato String
-    private val  allowedConnections = MutableLiveData(false)
+    private val  allowedConnections = MutableLiveData(true)
 
     fun saveTokens(amount: Int, values: MutableList<Transaction>) {
         val currentTokens = sharedPreferences.getInt(TOKENS_KEY, 0)
@@ -69,7 +69,7 @@ class SharedPreferencesData private constructor(context: Context) {
     }
 
     fun getConnections(): Boolean {
-        return sharedPreferencesConections.getBoolean("connections", false)
+        return sharedPreferencesConections.getBoolean("connections", true)
     }
 
 

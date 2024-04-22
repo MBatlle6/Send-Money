@@ -11,7 +11,7 @@
     <string name="permission_denied_explanation">Se denegó el permiso, pero se necesita para la funcionalidad principal.</string>
     <string name="settings">Ajustes</string>
     <string name="app_id">com.example.widgets_compose</string>
-    <string name="advice">Consejo.</string>
+    <string name="advice">Consejo</string>
     <string name="buy_tokens">Comprar tokens</string>
     <string name="sell_tokens">Vender tokens</string>
     <string name="tokens_abreviation">Tks</string>

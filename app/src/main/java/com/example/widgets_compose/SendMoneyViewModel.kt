@@ -33,13 +33,17 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     val userLatitude = MutableLiveData<Double>(0.0)
     val userLongitude = MutableLiveData<Double>(0.0)
     val settingsDialogue = MutableLiveData(false)
-    val allowAllConnections = MutableLiveData(false)
+    val allowAllConnections = MutableLiveData(true)
+    val isLogged = MutableLiveData(false)
 
     val transactions = MutableLiveData<MutableList<Transaction>>(
         mutableListOf()
     )
 
 
+    fun setLogged(value: Boolean){
+        isLogged.value = value
+    }
 
 
     fun setAllowAllConnections(allow: Boolean){
