@@ -2,6 +2,7 @@ package com.example.widgets_compose
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 
 class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesData, private val sharedPreferencesConnection:SharedPreferencesData ): ViewModel() {
 
@@ -39,6 +40,8 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     )
 
 
+
+
     fun setAllowAllConnections(allow: Boolean){
         allowAllConnections.value = allow
         sharedPreferencesConnection.setConnections(allowAllConnections.value!!)
@@ -55,7 +58,7 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     }
 
     fun showSettingsDialogue(show : Boolean){
-        send_dialogue.value = show
+        settingsDialogue.value = show
     }
 
     fun setUserLongitude(longitude : Double){

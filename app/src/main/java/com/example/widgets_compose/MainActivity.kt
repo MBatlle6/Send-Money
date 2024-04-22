@@ -4,7 +4,6 @@ import SendMoneyViewModelFactory
 import android.Manifest
 import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
-import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -35,8 +34,8 @@ class MainActivity : ComponentActivity() {
     private lateinit var networkStateMonitor: NetworkStateMonitor
     private lateinit var networkState: LiveData<Boolean>
     lateinit var mFusedLocationClient : FusedLocationProviderClient
-    lateinit var locationManager : LocationManager
     private lateinit var locationPermissionLauncher: ActivityResultLauncher<Array<String>>
+
 
 
 
@@ -61,7 +60,6 @@ class MainActivity : ComponentActivity() {
         viewModel.getAllowAllConnections()
         super.onCreate(savedInstanceState)
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         //calculateTokens(viewModel, this)
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
         locationPermissionLauncher = registerForActivityResult(
@@ -116,7 +114,7 @@ class MainActivity : ComponentActivity() {
             viewModel.userLatitude.observeAsState().value
             viewModel.userLongitude.observeAsState().value
             viewModel.allowAllConnections.observeAsState().value
-
+            viewModel.settingsDialogue.observeAsState().value
 
 
 
@@ -141,23 +139,10 @@ class MainActivity : ComponentActivity() {
                                 Manifest.permission.ACCESS_FINE_LOCATION
                             ) == PackageManager.PERMISSION_GRANTED)
                         {
-                            if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-                                SettingsDialogue(activity = this, viewModel = viewModel)
-                            }
-                            else{
-                                GetFineLocation(this, mFusedLocationClient, viewModel)
-                            }
+                            GetFineLocation(this, mFusedLocationClient, viewModel)
 
                         }
-                        else{
-                            if(!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-                                SettingsDialogue(activity = this, viewModel = viewModel)
-                            }
-                            else{
-                                GetCoarseLocation(this, mFusedLocationClient, viewModel)
-                            }
-
-                        }
+                        else GetCoarseLocation(this, mFusedLocationClient, viewModel)
                         BaseScreen(viewModel = viewModel, this, sharedPreferencesData)
                     }
                 }
