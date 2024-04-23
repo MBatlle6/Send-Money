@@ -30,6 +30,9 @@ import androidx.compose.ui.unit.sp
 import com.example.widgets_compose.R
 import com.example.widgets_compose.Transaction
 import com.example.widgets_compose.SendMoneyViewModel
+import com.example.widgets_compose.auth
+import com.example.widgets_compose.getAuthIntent
+import com.example.widgets_compose.isAuthClient
 import com.example.widgets_compose.ui.theme.Turquoise
 
 @Composable

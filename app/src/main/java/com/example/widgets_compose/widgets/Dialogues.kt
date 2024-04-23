@@ -2,15 +2,20 @@ package com.example.widgets_compose.widgets
 
 import android.content.Intent
 import android.provider.Settings
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import com.example.widgets_compose.MainActivity
 import com.example.widgets_compose.R
 import com.example.widgets_compose.SendMoneyViewModel
 import com.example.widgets_compose.Transaction
+import com.example.widgets_compose.auth
 import com.example.widgets_compose.backAction
+import com.firebase.ui.auth.AuthUI
 import java.time.LocalDate
 
 @Composable
@@ -154,4 +159,87 @@ fun SettingsDialogue(activity: MainActivity, viewModel: SendMoneyViewModel){
             text = { Text(text = activity.getString(R.string.pleaseActivateLoacationSettings)) },
 
             )
+}
+
+@Composable
+fun SignOutDialogue(activity: MainActivity, viewModel: SendMoneyViewModel){
+    AlertDialog(
+        onDismissRequest = {viewModel.showSignOutDialogue(false)},
+        dismissButton = {
+                        TextButton(onClick = {viewModel.showSignOutDialogue(false)}) {
+                            Text(text = activity.getString(R.string.remain))
+                        }
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                AuthUI.getInstance()
+                    .signOut(activity)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            // Sign Out succeeded, show a success toast
+                            Toast.makeText(activity, "Successfully signed out!", Toast.LENGTH_SHORT).show()
+                            Log.d("UserSignOut", "Sign Out.")
+                        } else {
+                            // Sign Out failed, show an error toast and print the exception message
+                            Toast.makeText(activity, "Error signing out: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                            Log.e("UserDeletion", "Error signing out.", task.exception)
+                        }
+                    }
+                val intent = Intent(activity, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                activity.startActivity(intent)
+                activity.finish()
+                //viewModel.showSettingsDialogue(false)
+
+            }) {
+                Text(text = activity.getString(R.string.signOut))
+            }
+        },
+        title = { Text(text = activity.getString(R.string.signOut)) },
+        text = { Text(text = activity.getString(R.string.signOutQuestion)) },
+
+        )
+}
+
+
+@Composable
+fun DeleteAccountDialogue(activity: MainActivity, viewModel: SendMoneyViewModel){
+    AlertDialog(
+        onDismissRequest = {viewModel.showDeleteAccountDialogue(false)},
+        dismissButton = {
+            TextButton(onClick = {viewModel.showDeleteAccountDialogue(false)}) {
+                Text(text = activity.getString(R.string.remain))
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                AuthUI.getInstance()
+                    .delete(activity)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            // Deletion succeeded, show a success toast
+                            Toast.makeText(activity, "Account deleted successfully!", Toast.LENGTH_SHORT).show()
+                            Log.d("UserDeletion", "User account deleted.")
+                        } else {
+                            // Deletion failed, show an error toast and print the exception message
+                            Toast.makeText(activity, "Error deleting account: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                            Log.e("UserDeletion", "Error deleting user account.", task.exception)
+                        }
+                    }
+                val intent = Intent(activity, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                activity.startActivity(intent)
+                activity.finish()
+            }) {
+                Text(
+                    text = activity.getString(R.string.deleteAccount),
+                    color = Color.Red
+                )
+            }
+        },
+        title = { Text(text = activity.getString(R.string.deleteAccount)) },
+        text = { Text(text = activity.getString(R.string.deleteAccountQuestion) + "\n"+ (auth.currentUser?.email
+            ?: "")) },
+
+        )
 }

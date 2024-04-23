@@ -49,5 +49,13 @@
     <string name="mobileConnected">Mobile connected!</string>
     <string name="wrongSharedPreferences">No coincidences with user preferences!!</string>
     <string name="restartApp">Restart App</string>
+    <string name="signOut">Sign Out</string>
+    <string name="deleteAccountQuestion">Are you sure you want to delete your account</string>
+    <string name="signOutQuestion">Do you want to sign out?</string>
+    <string name="deleteAccount">Delete Account</string>
+    <string name="couldNotSignOut">Couldn\'t sign out</string>
+    <string name="couldNotDeleteAccount">Couldn\'t delete account</string>
+
+
 
 </resources>

@@ -35,11 +35,21 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     val settingsDialogue = MutableLiveData(false)
     val allowAllConnections = MutableLiveData(true)
     val isLogged = MutableLiveData(false)
+    val signOutDialogue = MutableLiveData(false)
+    val deleteAccountDialogue = MutableLiveData(false)
 
     val transactions = MutableLiveData<MutableList<Transaction>>(
         mutableListOf()
     )
 
+
+    fun showSignOutDialogue(show : Boolean){
+        signOutDialogue.value = show
+    }
+
+    fun showDeleteAccountDialogue(show : Boolean){
+        deleteAccountDialogue.value = show
+    }
 
     fun setLogged(value: Boolean){
         isLogged.value = value

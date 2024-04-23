@@ -42,4 +42,10 @@
     <string name="mobileConnected">Datos móbiles conectados!</string>
     <string name="wrongSharedPreferences">No hay coincidencias con las preferencias del usuario!!</string>
     <string name="restartApp">Reiniciar App</string>
+    <string name="signOut">Cerrar sesión</string>
+    <string name="deleteAccountQuestion">Estás seguro que quieres eliminar la cuenta?</string>
+    <string name="signOutQuestion">Quieres cerrar sesión?</string>
+    <string name="deleteAccount">Eliminar cuenta</string>
+    <string name="couldNotSignOut">No se pudo cerrar sesión</string>
+    <string name="couldNotDeleteAccount">No se pudo eliminar la cuenta</string>
 </resources>

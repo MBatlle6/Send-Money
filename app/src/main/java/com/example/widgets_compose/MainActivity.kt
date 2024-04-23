@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
@@ -19,6 +20,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.LiveData
 import com.example.widgets_compose.screens.BaseScreen
 import com.example.widgets_compose.ui.theme.Widgets_ComposeTheme
@@ -29,6 +32,7 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.delay
 
 
 class MainActivity : ComponentActivity() {
@@ -61,8 +65,20 @@ class MainActivity : ComponentActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        viewModel.getAllowAllConnections()
+
+
+        signInLauncher = registerForActivityResult(
+            FirebaseAuthUIActivityResultContract()
+        ) { res ->
+            onSignInResult(res, this, viewModel)
+        }
+        if(!isAuthClient()){
+            signInLauncher.launch(getAuthIntent())
+            viewModel.setLogged(true)
+        }
+
         super.onCreate(savedInstanceState)
+        viewModel.getAllowAllConnections()
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         //calculateTokens(viewModel, this)
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
@@ -82,11 +98,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        signInLauncher = registerForActivityResult(
-            FirebaseAuthUIActivityResultContract()
-        ) { res ->
-            onSignInResult(res, this, viewModel)
-        }
+
 
         networkStateMonitor = NetworkStateMonitor(this, viewModel)
     }
@@ -94,9 +106,6 @@ class MainActivity : ComponentActivity() {
 
     public override fun onStart() {
         super.onStart()
-
-        //S'hauria de ficar al onCreate() els observeAsState()
-
         setContent {
             viewModel.selectedHome.observeAsState().value
             viewModel.selectedPlace.observeAsState().value
@@ -126,6 +135,8 @@ class MainActivity : ComponentActivity() {
             viewModel.allowAllConnections.observeAsState().value
             viewModel.settingsDialogue.observeAsState().value
             viewModel.isLogged.observeAsState().value
+            viewModel.deleteAccountDialogue.observeAsState().value
+            viewModel.signOutDialogue.observeAsState().value
 
 
             Widgets_ComposeTheme {
@@ -153,12 +164,10 @@ class MainActivity : ComponentActivity() {
 
                         }
                         else GetCoarseLocation(this, mFusedLocationClient, viewModel)
-                        if (!isAuthClient()){
+                        if(!isAuthClient() && !viewModel.isLogged.value!!){
                             signInLauncher.launch(getAuthIntent())
                         }
-                        else{
-                            BaseScreen(viewModel = viewModel, this, sharedPreferencesData)
-                        }
+                        BaseScreen(viewModel = viewModel, this, sharedPreferencesData)
                     }
                 }
             }
@@ -207,6 +216,8 @@ class MainActivity : ComponentActivity() {
     }
 
 }
+
+
 
 fun backAction(viewModel: SendMoneyViewModel){
     if (viewModel.selectedHome.value == true){
