@@ -227,3 +227,28 @@ fun SendTokensButton(label: String, viewModel: SendMoneyViewModel){
         )
     }
 }
+
+@Composable
+fun OtherUserEmailWritingButton(label: String, viewModel: SendMoneyViewModel) {
+    val focusManager = LocalFocusManager.current
+    OutlinedTextField(
+        //Afegir isError en la fase del Firebase
+        leadingIcon = {
+            Icon(imageVector = Icons.Filled.Email, contentDescription = "")
+        },
+        value = viewModel.otherUserEmail.value!!,
+        onValueChange = {
+            viewModel.setOtherUserEmail(it)
+        },
+        label = { Text(text = label) },
+        singleLine = true,
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Done
+        ),
+        modifier =
+        Modifier.padding(0.dp, 50.dp, 0.dp, 20.dp)
+            .fillMaxWidth(),
+        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+    )
+}

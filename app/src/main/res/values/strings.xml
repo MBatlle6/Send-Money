@@ -55,6 +55,10 @@
     <string name="deleteAccount">Delete Account</string>
     <string name="couldNotSignOut">Couldn\'t sign out</string>
     <string name="couldNotDeleteAccount">Couldn\'t delete account</string>
+    <string name="otherUserEmail">Other user email</string>
+    <string name="getOtherUserLocation">Get other user location</string>
+    <string name="currentLocation">Current Location</string>
+    <string name="previousLocation">Previous Location</string>
 
 
 

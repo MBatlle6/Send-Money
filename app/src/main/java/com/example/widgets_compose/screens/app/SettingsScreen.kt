@@ -1,6 +1,9 @@
 package com.example.widgets_compose.screens.app
 
+import android.content.ContentValues.TAG
 import android.content.Intent
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +36,8 @@ import com.example.widgets_compose.ui.theme.Turquoise
 import com.example.widgets_compose.widgets.DeleteAccountDialogue
 import com.example.widgets_compose.widgets.SignOutDialogue
 import com.firebase.ui.auth.AuthUI
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 @Composable
 fun SettingsScreen(
@@ -55,6 +60,32 @@ fun SettingsScreen(
             )
         Spacer(modifier = Modifier.height(16.dp))
         CheckList(viewModel = viewModel, activity = activity)
+        //Uncomment when it's obvius which password "implementetion" implement
+        /*
+        Spacer(modifier = Modifier.height(48.dp))
+        Row(verticalAlignment = Alignment.CenterVertically){
+            Text(
+                text = "Password",
+                fontSize = 30.sp,
+            )
+            Spacer(modifier = Modifier.width(140.dp))
+            Button(
+                onClick = {
+                    val user = Firebase.auth.currentUser
+
+                    Firebase.auth.sendPasswordResetEmail(user!!.email!!)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Toast.makeText(activity, "Email sent", Toast.LENGTH_SHORT).show()
+                                Log.d(TAG, "Email sent.")
+                            }
+                        }
+                },
+                colors = ButtonDefaults.buttonColors(Turquoise)
+            ) {
+                Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Sign Out")
+            }
+        }*/
         Spacer(modifier = Modifier.height(48.dp))
         Row(verticalAlignment = Alignment.CenterVertically){
             Text(

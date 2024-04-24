@@ -48,4 +48,8 @@
     <string name="deleteAccount">Eliminar cuenta</string>
     <string name="couldNotSignOut">No se pudo cerrar sesión</string>
     <string name="couldNotDeleteAccount">No se pudo eliminar la cuenta</string>
+    <string name="otherUserEmail">Correo electrónico de otro usuario</string>
+    <string name="getOtherUserLocation">Obtener ubicación de otro usuario</string>
+    <string name="currentLocation">Localización actual</string>
+    <string name="previousLocation">Localización previa</string>
 </resources>

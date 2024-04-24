@@ -137,6 +137,10 @@ class MainActivity : ComponentActivity() {
             viewModel.isLogged.observeAsState().value
             viewModel.deleteAccountDialogue.observeAsState().value
             viewModel.signOutDialogue.observeAsState().value
+            viewModel.otherUserEmail.observeAsState().value
+            viewModel.otherUserLocation.observeAsState().value
+            viewModel.previousLocation.observeAsState().value
+            viewModel.currentLocation.observeAsState().value
 
 
             Widgets_ComposeTheme {
@@ -220,8 +224,19 @@ class MainActivity : ComponentActivity() {
 
 
 fun backAction(viewModel: SendMoneyViewModel){
-    if (viewModel.selectedHome.value == true){
+    if (viewModel.selectedHome.value!!){
         viewModel.showClosingDialogue()
+    }
+    else if (viewModel.selectedPlace.value!!){
+        if (viewModel.currentLocation.value!! || viewModel.previousLocation.value!! || viewModel.otherUserLocation.value!!){
+            viewModel.showCurrentLocation(false)
+            viewModel.showPreviousLocation(false)
+            viewModel.showOtherUserLocation(false)
+        }
+        else{
+            viewModel.unSelectEverything()
+            viewModel.selectHome()
+        }
     }
     else {
         viewModel.unSelectEverything()
