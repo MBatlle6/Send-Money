@@ -59,6 +59,10 @@
     <string name="getOtherUserLocation">Get other user location</string>
     <string name="currentLocation">Current Location</string>
     <string name="previousLocation">Previous Location</string>
+    <string name="password">Password</string>
+    <string name="sendEmail">Send Email</string>
+    <string name="resetPasswordQuestion">Do you want to receive an email for updating your password?</string>
+    <string name="sentEmail">Email sent</string>
 
 
 

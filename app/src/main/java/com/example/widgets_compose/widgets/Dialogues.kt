@@ -1,5 +1,6 @@
 package com.example.widgets_compose.widgets
 
+import android.content.ContentValues
 import android.content.Intent
 import android.provider.Settings
 import android.util.Log
@@ -243,6 +244,44 @@ fun DeleteAccountDialogue(activity: MainActivity, viewModel: SendMoneyViewModel)
         title = { Text(text = activity.getString(R.string.deleteAccount)) },
         text = { Text(text = activity.getString(R.string.deleteAccountQuestion) + "\n"+ (auth.currentUser?.email
             ?: "")) },
+
+        )
+}
+
+@Composable
+fun ResetPasswordEmailDialogue(activity: MainActivity, viewModel: SendMoneyViewModel){
+    AlertDialog(
+        onDismissRequest = {viewModel.showResetPasswordEmailDialogue(false)},
+        dismissButton = {
+            TextButton(onClick = {viewModel.showResetPasswordEmailDialogue(false)}) {
+                Text(text = activity.getString(R.string.remain))
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                val user = Firebase.auth.currentUser
+
+                Firebase.auth.sendPasswordResetEmail(user!!.email!!)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(activity, activity.getString(R.string.sentEmail), Toast.LENGTH_SHORT).show()
+                            Log.d(ContentValues.TAG, "Email sent.")
+                        }
+                        else{
+                            Toast.makeText(activity, "Error deleting account: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                viewModel.showResetPasswordEmailDialogue(false)
+                backAction(viewModel)
+
+            }) {
+                Text(
+                    text = activity.getString(R.string.sendEmail),
+                )
+            }
+        },
+        title = { Text(text = activity.getString(R.string.password)) },
+        text = { Text(text = activity.getString(R.string.resetPasswordQuestion))},
 
         )
 }

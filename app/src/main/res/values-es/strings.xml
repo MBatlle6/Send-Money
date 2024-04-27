@@ -52,4 +52,8 @@
     <string name="getOtherUserLocation">Obtener ubicación de otro usuario</string>
     <string name="currentLocation">Localización actual</string>
     <string name="previousLocation">Localización previa</string>
+    <string name="password">Contraseña</string>
+    <string name="sendEmail">Enviar Email</string>
+    <string name="resetPasswordQuestion">Quires recibir un email para actualizar tu contraseña?</string>
+    <string name="sentEmail">Email enviado</string>
 </resources>

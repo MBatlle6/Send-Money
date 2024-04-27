@@ -141,6 +141,7 @@ class MainActivity : ComponentActivity() {
             viewModel.otherUserLocation.observeAsState().value
             viewModel.previousLocation.observeAsState().value
             viewModel.currentLocation.observeAsState().value
+            viewModel.resetPasswordEmailDialogue.observeAsState().value
 
 
             Widgets_ComposeTheme {

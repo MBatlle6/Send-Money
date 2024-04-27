@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
@@ -34,6 +35,7 @@ import com.example.widgets_compose.SharedPreferencesData
 import com.example.widgets_compose.backAction
 import com.example.widgets_compose.ui.theme.Turquoise
 import com.example.widgets_compose.widgets.DeleteAccountDialogue
+import com.example.widgets_compose.widgets.ResetPasswordEmailDialogue
 import com.example.widgets_compose.widgets.SignOutDialogue
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.Firebase
@@ -50,6 +52,9 @@ fun SettingsScreen(
     if (viewModel.deleteAccountDialogue.value!!){
         DeleteAccountDialogue(activity = activity, viewModel = viewModel)
     }
+    if (viewModel.resetPasswordEmailDialogue.value!!){
+        ResetPasswordEmailDialogue(activity = activity, viewModel = viewModel)
+    }
     Column(
         modifier = Modifier.padding(16.dp)
     ) {
@@ -60,32 +65,22 @@ fun SettingsScreen(
             )
         Spacer(modifier = Modifier.height(16.dp))
         CheckList(viewModel = viewModel, activity = activity)
-        //Uncomment when it's obvius which password "implementetion" implement
-        /*
         Spacer(modifier = Modifier.height(48.dp))
         Row(verticalAlignment = Alignment.CenterVertically){
             Text(
                 text = "Password",
                 fontSize = 30.sp,
             )
-            Spacer(modifier = Modifier.width(140.dp))
+            Spacer(modifier = Modifier.width(120.dp))
             Button(
                 onClick = {
-                    val user = Firebase.auth.currentUser
-
-                    Firebase.auth.sendPasswordResetEmail(user!!.email!!)
-                        .addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                Toast.makeText(activity, "Email sent", Toast.LENGTH_SHORT).show()
-                                Log.d(TAG, "Email sent.")
-                            }
-                        }
+                    viewModel.showResetPasswordEmailDialogue(true)
                 },
                 colors = ButtonDefaults.buttonColors(Turquoise)
             ) {
-                Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Sign Out")
+                Icon(Icons.Filled.Refresh, contentDescription = "Reset password email")
             }
-        }*/
+        }
         Spacer(modifier = Modifier.height(48.dp))
         Row(verticalAlignment = Alignment.CenterVertically){
             Text(

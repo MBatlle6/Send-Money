@@ -41,10 +41,15 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     val currentLocation = MutableLiveData(false)
     val previousLocation = MutableLiveData(false)
     val otherUserLocation = MutableLiveData(false)
+    val resetPasswordEmailDialogue = MutableLiveData(false)
 
     val transactions = MutableLiveData<MutableList<Transaction>>(
         mutableListOf()
     )
+
+    fun showResetPasswordEmailDialogue(show : Boolean){
+        resetPasswordEmailDialogue.value = show
+    }
 
     fun showCurrentLocation(show : Boolean){
         currentLocation.value = show
