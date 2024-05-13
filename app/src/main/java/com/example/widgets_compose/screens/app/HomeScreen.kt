@@ -30,9 +30,6 @@ import androidx.compose.ui.unit.sp
 import com.example.widgets_compose.R
 import com.example.widgets_compose.Transaction
 import com.example.widgets_compose.SendMoneyViewModel
-import com.example.widgets_compose.auth
-import com.example.widgets_compose.getAuthIntent
-import com.example.widgets_compose.isAuthClient
 import com.example.widgets_compose.ui.theme.Turquoise
 
 @Composable
@@ -54,12 +51,20 @@ import com.example.widgets_compose.ui.theme.Turquoise
                 .fillMaxWidth()
                 .size(210.dp)
         )
-        Text(
-            text = viewModel.getTokens().toString()  + " " + activity.getString(R.string.tokens_abreviation),
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold
-        )
-        
+        if(viewModel.transactionTokens.value!!){
+            Text(
+                text = viewModel.getTokens().toString()  + " " + activity.getString(R.string.tokens_abreviation),
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        else{
+            Text(
+                text = "**",
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
         Spacer(modifier = Modifier.size(20.dp))
 
         if (viewModel.transactions.value?.isEmpty() == true) {
@@ -79,7 +84,7 @@ import com.example.widgets_compose.ui.theme.Turquoise
                 Column {
                     var i = 0
                     while(i < viewModel.transactions.value?.size!!){
-                        TransactionItem(transaction = viewModel.transactions.value!![i], activity)
+                        TransactionItem(transaction = viewModel.transactions.value!![i], activity, viewModel)
                         i++
                     }
                 }
@@ -97,7 +102,8 @@ import com.example.widgets_compose.ui.theme.Turquoise
                             val transaction = viewModel.transactions.value!![index]
                             transaction.let { TransactionItem(
                                 transaction = it,
-                                activity = activity
+                                activity = activity,
+                                viewModel = viewModel
                             ) }
                         }
                     }
@@ -123,7 +129,11 @@ import com.example.widgets_compose.ui.theme.Turquoise
 
 
 @Composable
-fun TransactionItem(transaction: Transaction, activity: ComponentActivity) {
+fun TransactionItem(
+    transaction: Transaction,
+    activity: ComponentActivity,
+    viewModel: SendMoneyViewModel
+) {
     //val isSent = transaction.SENDER == Firebase.auth.currentUser?.email   #Para el Firebase (No borrar)
     val isSent: Boolean
     if (transaction.SENDER == activity.getString(R.string.me)) isSent = true else isSent= false
@@ -156,15 +166,15 @@ fun TransactionItem(transaction: Transaction, activity: ComponentActivity) {
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            /*
-            Text(
-                text = transaction.DATE.toString(),
-                fontSize = 14.sp,
-                color = Color.Gray,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            */
+            if(viewModel.transactionDates.value!!){
+                Text(
+                    text = transaction.DATE.toString(),
+                    fontSize = 14.sp,
+                    color = Color.Gray,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
         Text(
             text = "$sign${transaction.AMOUNT}",

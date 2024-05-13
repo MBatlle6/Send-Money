@@ -203,6 +203,8 @@ class MainActivity : ComponentActivity() {
             viewModel.previousLocation.observeAsState().value
             viewModel.currentLocation.observeAsState().value
             viewModel.resetPasswordEmailDialogue.observeAsState().value
+            viewModel.transactionTokens.observeAsState().value
+            viewModel.transactionDates.observeAsState().value
 
 
             Widgets_ComposeTheme {

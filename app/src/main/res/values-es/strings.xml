@@ -56,4 +56,7 @@
     <string name="sendEmail">Enviar Email</string>
     <string name="resetPasswordQuestion">Quires recibir un email para actualizar tu contraseña?</string>
     <string name="sentEmail">Email enviado</string>
+    <string name="transactions">Transacciones</string>
+    <string name="showDates">Mostrar fechas</string>
+    <string name="showTokens">Mostrar tokens</string>
 </resources>

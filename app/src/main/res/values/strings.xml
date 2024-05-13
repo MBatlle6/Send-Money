@@ -65,7 +65,9 @@
     <string name="sentEmail">Email sent</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
     <string name="msg_token_fmt" translatable="false">FCM registration Token: %s</string>
-
+    <string name="transactions">Transactions</string>
+    <string name="showDates">Show dates</string>
+    <string name="showTokens">Show tokens</string>
 
 
 

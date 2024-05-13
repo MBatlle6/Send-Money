@@ -66,9 +66,16 @@ fun SettingsScreen(
         Spacer(modifier = Modifier.height(16.dp))
         CheckList(viewModel = viewModel, activity = activity)
         Spacer(modifier = Modifier.height(48.dp))
+        Text(
+            text = activity.getString(R.string.transactions),
+            fontSize = 30.sp,
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        TransactionsCheckList(viewModel = viewModel, activity = activity)
+        Spacer(modifier = Modifier.height(48.dp))
         Row(verticalAlignment = Alignment.CenterVertically){
             Text(
-                text = "Password",
+                text = activity.getString(R.string.password),
                 fontSize = 30.sp,
             )
             Spacer(modifier = Modifier.width(120.dp))
@@ -152,3 +159,48 @@ fun CheckList(
     }
 }
 
+
+@Composable
+fun TransactionsCheckList(
+    viewModel: SendMoneyViewModel,
+    activity: MainActivity
+){
+    Row(
+        verticalAlignment = Alignment.CenterVertically // Add this line
+    ) {
+        Checkbox(
+            checked = viewModel.transactionDates.value!!,
+            onCheckedChange = {
+                if (!viewModel.transactionDates.value!!){
+                    viewModel.showTransactionDates(true)
+                }
+                else{
+                    viewModel.showTransactionDates(false)
+                }
+            },
+        )
+        Text(
+            text = activity.getString(R.string.showDates),
+            fontSize = 20.sp,
+        )
+    }
+    Row(
+        verticalAlignment = Alignment.CenterVertically // Add this line
+    ) {
+        Checkbox(
+            checked = viewModel.transactionTokens.value!!,
+            onCheckedChange = {
+                if (!viewModel.transactionTokens.value!!){
+                    viewModel.showTransactionTokens(true)
+                }
+                else{
+                    viewModel.showTransactionTokens(false)
+                }
+            },
+        )
+        Text(
+            text = activity.getString(R.string.showTokens),
+            fontSize = 20.sp,
+        )
+    }
+}
