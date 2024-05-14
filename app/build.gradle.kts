@@ -73,6 +73,8 @@ dependencies {
     implementation("com.google.firebase:firebase-messaging:24.0.0")
     implementation("com.google.firebase:firebase-messaging-ktx:24.0.0")
     implementation("androidx.work:work-runtime:2.9.0")
+    implementation("com.google.firebase:firebase-auth-ktx:23.0.0")
+    implementation("com.google.firebase:firebase-firestore-ktx:25.0.0")
 
 
     testImplementation("junit:junit:4.13.2")

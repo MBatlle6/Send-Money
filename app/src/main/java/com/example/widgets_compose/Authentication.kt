@@ -11,6 +11,7 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.android.gms.auth.api.Auth
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 private val providers = arrayListOf(
     AuthUI.IdpConfig.GoogleBuilder().build(),
@@ -39,9 +40,44 @@ fun getAuthIntent(): Intent {
 
 fun onSignInResult(result: FirebaseAuthUIAuthenticationResult, activity: MainActivity, viewModel: SendMoneyViewModel) {
     val response = result.idpResponse
+
+
     if (result.resultCode == RESULT_OK) {
         // Successfully signed in
-        Toast.makeText(activity, "User signed in", Toast.LENGTH_SHORT).show()
+        val currentUser = auth.currentUser
+        val db = FirebaseFirestore.getInstance()
+        val userRef = db.collection("users").document(currentUser!!.uid)
+
+        Toast.makeText(activity, "User signed in ${currentUser!!.email}", Toast.LENGTH_SHORT)
+            .show()
+
+        userRef.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val document = task.result
+                if (!document.exists()) {
+                    val user = hashMapOf(
+                        "uid" to currentUser.uid,
+                        "email" to currentUser.email,
+                        "tokens" to 0,
+                        "location" to mapOf("latitude" to 0.0, "longitude" to 0.0)
+                    )
+
+                    userRef.set(user).addOnSuccessListener {
+                        Toast.makeText(
+                            activity,
+                            "User added to Firestore",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }.addOnFailureListener { e ->
+                        Toast.makeText(
+                            activity,
+                            "Error adding user to Firestore: ${e.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
 
     } else {
         // Sign in failed. If response is null the user canceled the
