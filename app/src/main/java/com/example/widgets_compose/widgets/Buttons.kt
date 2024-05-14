@@ -22,8 +22,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.widgets_compose.SendMoneyViewModel
-import com.example.widgets_compose.SharedPreferencesData
-import com.example.widgets_compose.SharedPreferencesData.*
 import com.example.widgets_compose.ui.theme.Turquoise
 
 @Composable
@@ -128,12 +126,12 @@ fun SellTokensButton(label: String, viewModel: SendMoneyViewModel){
     Button(
         colors = ButtonDefaults.buttonColors(Turquoise),
         onClick = {
-            if(viewModel.tokens_to_sell.value == 0 || viewModel.tokens_to_sell.value!! > viewModel.getTokens()){
+            if(viewModel.tokens_to_sell.value == 0 ){
                 viewModel.changeValidityTokensToSell(false)
             }else{
                 viewModel.changeValidityTokensToSell(true)
                 viewModel.showSellDialogue(true)
-                //Sell Tokens
+
             }
         }
     ) {
@@ -212,12 +210,12 @@ fun SendTokensButton(label: String, viewModel: SendMoneyViewModel){
     Button(
         colors = ButtonDefaults.buttonColors(Turquoise),
         onClick = {
-            if(viewModel.tokens_to_send.value == 0 || viewModel.tokens_to_send.value!! > viewModel.getTokens() ){
+            if(viewModel.tokens_to_send.value == 0){
                 viewModel.changeValidityTokensToSend(false)
             }else{
                 viewModel.changeValidityTokensToSend(true)
                 viewModel.showSendDialogue(true)
-                //Sell Tokens
+                viewModel.sellTokens(tokensToSend = 100)
             }
         }
     ) {

@@ -19,7 +19,6 @@ import com.example.widgets_compose.backAction
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import com.google.firebase.auth.ktx.auth
 import java.time.LocalDate
 
 @Composable

@@ -37,9 +37,7 @@ class SharedPreferencesData private constructor(context: Context) {
             mutableListOf()
         }
     }
-    fun getTokens(): Int {
-        return sharedPreferences.getInt(TOKENS_KEY, 0) // Devuelve 0 si no hay ningún valor guardado previamente
-    }
+
 
     private fun encrypt(input: String): String {
         val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")

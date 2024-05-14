@@ -205,6 +205,7 @@ class MainActivity : ComponentActivity() {
             viewModel.resetPasswordEmailDialogue.observeAsState().value
             viewModel.transactionTokens.observeAsState().value
             viewModel.transactionDates.observeAsState().value
+            viewModel.getTokens()
 
 
             Widgets_ComposeTheme {

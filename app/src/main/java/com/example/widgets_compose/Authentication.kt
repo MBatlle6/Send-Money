@@ -47,8 +47,7 @@ fun onSignInResult(result: FirebaseAuthUIAuthenticationResult, activity: MainAct
         val currentUser = auth.currentUser
         val db = FirebaseFirestore.getInstance()
         val userRef = db.collection("users").document(currentUser!!.uid)
-
-        Toast.makeText(activity, "User signed in ${currentUser!!.email}", Toast.LENGTH_SHORT)
+        Toast.makeText(activity, "User signed in ${currentUser.email}", Toast.LENGTH_SHORT)
             .show()
 
         userRef.get().addOnCompleteListener { task ->
@@ -75,6 +74,8 @@ fun onSignInResult(result: FirebaseAuthUIAuthenticationResult, activity: MainAct
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+                }else {
+                    viewModel.getTokens()
                 }
             }
         }
