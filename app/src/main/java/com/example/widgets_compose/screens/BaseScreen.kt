@@ -21,7 +21,7 @@ import com.example.widgets_compose.screens.app.SettingsScreen
 fun BaseScreen(
     viewModel: SendMoneyViewModel,
     activity: MainActivity,
-    sharedPreferencesData: SharedPreferencesData
+    //sharedPreferencesData: SharedPreferencesData
 ) {
     if(viewModel.closingDialogue.value == true) ClosingDialogue(viewModel = viewModel, activity = activity)
     Scaffold(

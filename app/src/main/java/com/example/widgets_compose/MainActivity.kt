@@ -26,6 +26,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.LiveData
+import com.example.widgets_compose.messaging.MyFirebaseMessagingService
 import com.example.widgets_compose.screens.BaseScreen
 import com.example.widgets_compose.ui.theme.Widgets_ComposeTheme
 import com.example.widgets_compose.widgets.ConfigSnackbar
@@ -148,11 +149,13 @@ class MainActivity : ComponentActivity() {
 
                 // Get new FCM registration token
                 val token = task.result
-                //sendRegistrationToServer(token) Funció del MyFirebaseMessagingService
 
+                val myClass = MyFirebaseMessagingService()
+                myClass.sendRegistrationToServer(token)
                 //Log and toast
                 val msg = getString(R.string.msg_token_fmt, token)
                 Log.d(TAG, msg)
+
                 Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
             },
         )
@@ -202,11 +205,11 @@ class MainActivity : ComponentActivity() {
             viewModel.otherUserLocation.observeAsState().value
             viewModel.previousLocation.observeAsState().value
             viewModel.currentLocation.observeAsState().value
+            viewModel.currentTokens.observeAsState().value
             viewModel.resetPasswordEmailDialogue.observeAsState().value
             viewModel.transactionTokens.observeAsState().value
             viewModel.transactionDates.observeAsState().value
             viewModel.getTokens()
-
 
             Widgets_ComposeTheme {
                 // A surface container using the 'background' color from the theme
@@ -236,7 +239,7 @@ class MainActivity : ComponentActivity() {
                         if(!isAuthClient() && !viewModel.isLogged.value!!){
                             signInLauncher.launch(getAuthIntent())
                         }
-                        BaseScreen(viewModel = viewModel, this, sharedPreferencesData)
+                        BaseScreen(viewModel = viewModel, this/*, sharedPreferencesData*/)
                     }
                 }
             }

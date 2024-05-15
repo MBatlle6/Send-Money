@@ -58,7 +58,8 @@ fun onSignInResult(result: FirebaseAuthUIAuthenticationResult, activity: MainAct
                         "uid" to currentUser.uid,
                         "email" to currentUser.email,
                         "tokens" to 0,
-                        "location" to mapOf("latitude" to 0.0, "longitude" to 0.0)
+                        "location" to mapOf("latitude" to viewModel.userLatitude, "longitude" to viewModel.userLongitude),
+                        "fcmToken" to 0,
                     )
 
                     userRef.set(user).addOnSuccessListener {

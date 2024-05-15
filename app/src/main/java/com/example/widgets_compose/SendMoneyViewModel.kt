@@ -1,8 +1,10 @@
 package com.example.widgets_compose
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.widgets_compose.messaging.MyFirebaseMessagingService
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.firebase.firestore.FirebaseFirestore
@@ -49,8 +51,6 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     val transactionDates = MutableLiveData(true)
     val resetPasswordEmailDialogue = MutableLiveData(false)
     val currentUser = auth.currentUser
-    val db = FirebaseFirestore.getInstance()
-    val userDocRef = db.collection("users").document(currentUser!!.uid)
     private val _currentTokens = MutableLiveData<Int>()
     val currentTokens: LiveData<Int> = _currentTokens
 
@@ -135,7 +135,8 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     }
 
     fun getTokens(): Task<Int> {
-
+        val db = FirebaseFirestore.getInstance()
+        val userDocRef = db.collection("users").document(currentUser!!.uid)
         val tokensTaskCompletionSource = TaskCompletionSource<Int>()
 
         userDocRef.get().addOnSuccessListener { documentSnapshot ->
@@ -155,9 +156,19 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
 
     // Función para actualizar el número de tokens de un usuario
     fun setTokens(newTokenAmount: Int): Task<Int> {
+        val db = FirebaseFirestore.getInstance()
+        val userDocRef = db.collection("users").document(currentUser!!.uid)
         return getTokens().addOnSuccessListener { existingTokens ->
             val updatedTokens = newTokenAmount + existingTokens
             userDocRef.update("tokens", updatedTokens)
+            val updates = mapOf(
+                "location" to mapOf(
+                    "latitude" to userLatitude,
+                    "longitude" to userLongitude
+                )
+            )
+            db.collection("users").document(currentUser.uid).update(updates)
+
         }
         getTokens()
 
@@ -289,6 +300,7 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     fun startApp() {
         startApp.value = true
     }
+
 }
 
 

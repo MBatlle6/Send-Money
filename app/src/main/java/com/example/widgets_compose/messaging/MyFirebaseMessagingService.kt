@@ -15,6 +15,8 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.example.widgets_compose.MainActivity
 import com.example.widgets_compose.R
+import com.example.widgets_compose.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -113,7 +115,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
      * @param token The new token.
      */
     fun sendRegistrationToServer(token: String?) {
-        // TODO: Implement this method to send token to your app server.
+        val currentUser = auth.getCurrentUser()
+        val db = FirebaseFirestore.getInstance()
+        val userDocRef = db.collection("users").document(currentUser!!.uid)
+        userDocRef.update("fcmToken", token)
         Log.d(TAG, "sendRegistrationTokenToServer($token)")
     }
 
