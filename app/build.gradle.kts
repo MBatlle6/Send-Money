@@ -54,16 +54,13 @@ dependencies {
     implementation ("com.google.code.gson:gson:2.10.1")
     implementation ("commons-codec:commons-codec:1.16.1")
     implementation ("com.google.code.gson:gson:2.10.1")
-<<<<<<< HEAD
     implementation("androidx.core:core-ktx:1.13.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.0")
     implementation("androidx.activity:activity-compose:1.9.0")
-=======
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.9.0")
     implementation(platform("androidx.compose:compose-bom:2024.05.00"))
->>>>>>> 4a06226852111d64c6255148120aa5886abe9df0
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")

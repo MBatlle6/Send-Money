@@ -97,6 +97,7 @@ class MainActivity : ComponentActivity() {
             viewModel.setLogged(true)
         }
 
+
         super.onCreate(savedInstanceState)
         viewModel.getAllowAllConnections()
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -150,19 +151,15 @@ class MainActivity : ComponentActivity() {
 
                 // Get new FCM registration token
                 val token = task.result
+                //cal myClass = MyFirebaseMessagingService()
+                //myClass.sendRegistrationToServer(token)
 
-                val myClass = MyFirebaseMessagingService()
-                myClass.sendRegistrationToServer(token)
-                //Log and toast
                 val msg = getString(R.string.msg_token_fmt, token)
                 Log.d(TAG, msg)
 
                 Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
             },
         )
-
-
-
         networkStateMonitor = NetworkStateMonitor(this, viewModel)
         askNotificationPermission()
 
@@ -212,7 +209,11 @@ class MainActivity : ComponentActivity() {
             viewModel.resetPasswordEmailDialogue.observeAsState().value
             viewModel.transactionTokens.observeAsState().value
             viewModel.transactionDates.observeAsState().value
-            //viewModel.getTokens()
+
+            if (auth.currentUser != null){
+                viewModel.getTokens()
+            }
+
 
             Widgets_ComposeTheme {
                 // A surface container using the 'background' color from the theme

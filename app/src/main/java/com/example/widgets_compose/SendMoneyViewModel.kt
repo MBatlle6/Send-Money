@@ -7,7 +7,10 @@ import androidx.lifecycle.ViewModel
 import com.example.widgets_compose.messaging.MyFirebaseMessagingService
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.TaskCompletionSource
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 
 @Suppress("UNREACHABLE_CODE")
 class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesData, private val sharedPreferencesConnection:SharedPreferencesData ): ViewModel() {
@@ -50,11 +53,10 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     val transactionTokens = MutableLiveData(true)
     val transactionDates = MutableLiveData(true)
     val resetPasswordEmailDialogue = MutableLiveData(false)
-    val currentUser = auth.currentUser
-<<<<<<< HEAD
-=======
+    private val db = FirebaseFirestore.getInstance()
+    var tokensToSendInput: Int = 0
 
->>>>>>> 4a06226852111d64c6255148120aa5886abe9df0
+
     private val _currentTokens = MutableLiveData<Int>()
     val currentTokens: LiveData<Int> = _currentTokens
 
@@ -95,6 +97,9 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     }
 
     fun showDeleteAccountDialogue(show: Boolean) {
+        val currentUser = auth.currentUser
+        val db = FirebaseFirestore.getInstance()
+        db.collection("users").document(currentUser!!.uid).delete()
         deleteAccountDialogue.value = show
     }
 
@@ -138,13 +143,19 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
         valid_recipient.value = valid
     }
 
-    fun getTokens(): Task<Int> {
-        val db = FirebaseFirestore.getInstance()
-        val userDocRef = db.collection("users").document(currentUser!!.uid)
-<<<<<<< HEAD
-=======
+    fun getCurrentUser(): FirebaseUser? {
+        return auth.currentUser
+    }
 
->>>>>>> 4a06226852111d64c6255148120aa5886abe9df0
+   fun getDatabase () : FirebaseFirestore {
+        return FirebaseFirestore.getInstance()
+    }
+
+    fun getTokens(): Task<Int> {
+        val currentUser = getCurrentUser()
+        val db = getDatabase()
+        val userDocRef = db.collection("users").document(currentUser!!.uid)
+
         val tokensTaskCompletionSource = TaskCompletionSource<Int>()
 
         userDocRef.get().addOnSuccessListener { documentSnapshot ->
@@ -164,27 +175,80 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
 
     // Función para actualizar el número de tokens de un usuario
     fun setTokens(newTokenAmount: Int): Task<Int> {
+        val currentUser = getCurrentUser()
         val db = FirebaseFirestore.getInstance()
         val userDocRef = db.collection("users").document(currentUser!!.uid)
         return getTokens().addOnSuccessListener { existingTokens ->
             val updatedTokens = newTokenAmount + existingTokens
             userDocRef.update("tokens", updatedTokens)
+            val newAmount = updatedTokens
             val updates = mapOf(
                 "location" to mapOf(
                     "latitude" to userLatitude,
                     "longitude" to userLongitude
                 )
             )
+            getTokens()
             db.collection("users").document(currentUser.uid).update(updates)
-
+            //sharedPreferencesData.saveTokens(updatedTokens, newTokenAmount)
         }
-        getTokens()
 
     }
 
-    fun getTokensMain(): Int? {
-        return currentTokens.value
+
+    fun sendTokens(email: String) {
+        val currentUserUid = auth.currentUser?.uid
+        val tokensToSend = tokensToSendInput
+
+        getUserIdByEmail(email) { userUid ->
+            if (userUid != null) {
+                updateRecipientTokens(userUid, tokensToSend)
+                subtractTokensFromSender(currentUserUid!!, tokensToSend)
+            } else {
+                Log.e("SendMoneyViewModel", "User with email $email not found")
+            }
+        }
+
     }
+
+    fun getUserIdByEmail(email: String, callback: (String?) -> Unit) {
+        val db = FirebaseFirestore.getInstance()
+
+        // Create a query to find the user document with the given email
+        val query = db.collection("users").whereEqualTo("email", email)
+
+        // Get the result of the query
+        query.get().addOnSuccessListener { result ->
+            // Check if any documents were found
+            if (result.isEmpty) {
+                callback(null)
+                return@addOnSuccessListener
+            }
+
+            // Get the first document (assuming there should only be one user with the given email)
+            val document = result.documents[0]
+
+            // Return the user ID
+            callback(document.getString("uid"))
+        }
+    }
+
+
+
+    private fun updateRecipientTokens(uid: String, tokensToAdd: Int): Task<Void> {
+        return db.collection("users").document(uid)
+            .update("tokens", tokensToAdd.toLong())
+    }
+
+    private fun subtractTokensFromSender(uid: String, tokensToSubtract: Int): Task<Void> {
+        return db.collection("users").document(uid)
+            .update("tokens", FieldValue.increment(-tokensToSubtract.toLong()))
+    }
+
+
+
+
+
 
     fun sellTokens(tokensToSend: Int) {
         // Verifica si hay suficientes tokens para vender
