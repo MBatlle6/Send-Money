@@ -119,7 +119,7 @@ fun SellTokensButton(label: String, viewModel: SendMoneyViewModel){
     Button(
         colors = ButtonDefaults.buttonColors(Turquoise),
         onClick = {
-            if(viewModel.tokens_to_sell.value == 0 ){
+            if(viewModel.tokens_to_sell.value == 0 || viewModel.tokensToSendInput > viewModel.currentTokens.value!!){
                 viewModel.changeValidityTokensToSell(false)
             }else{
                 viewModel.changeValidityTokensToSell(true)
@@ -204,7 +204,7 @@ fun SendTokensButton(label: String, viewModel: SendMoneyViewModel){
     Button(
         colors = ButtonDefaults.buttonColors(Turquoise),
         onClick = {
-            if(viewModel.tokens_to_send.value == 0){
+            if(viewModel.tokens_to_send.value == 0 || viewModel.tokensToSendInput > viewModel.currentTokens.value!!){
                 viewModel.changeValidityTokensToSend(false)
             }else{
                 viewModel.changeValidityTokensToSend(true)
