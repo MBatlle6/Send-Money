@@ -1,9 +1,13 @@
 package com.example.widgets_compose
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.TaskCompletionSource
+import com.google.firebase.firestore.FirebaseFirestore
 
+@Suppress("UNREACHABLE_CODE")
 class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesData, private val sharedPreferencesConnection:SharedPreferencesData ): ViewModel() {
 
 
@@ -44,58 +48,63 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     val transactionTokens = MutableLiveData(true)
     val transactionDates = MutableLiveData(true)
     val resetPasswordEmailDialogue = MutableLiveData(false)
+    val currentUser = auth.currentUser
+    val db = FirebaseFirestore.getInstance()
+    val userDocRef = db.collection("users").document(currentUser!!.uid)
+    private val _currentTokens = MutableLiveData<Int>()
+    val currentTokens: LiveData<Int> = _currentTokens
 
     val transactions = MutableLiveData<MutableList<Transaction>>(
         mutableListOf()
     )
 
-    fun showTransactionDates(show : Boolean){
+    fun showTransactionDates(show: Boolean) {
         transactionDates.value = show
     }
 
-    fun showTransactionTokens(show : Boolean){
+    fun showTransactionTokens(show: Boolean) {
         transactionTokens.value = show
     }
 
-    fun showResetPasswordEmailDialogue(show : Boolean){
+    fun showResetPasswordEmailDialogue(show: Boolean) {
         resetPasswordEmailDialogue.value = show
     }
 
-    fun showCurrentLocation(show : Boolean){
+    fun showCurrentLocation(show: Boolean) {
         currentLocation.value = show
     }
 
-    fun showPreviousLocation(show : Boolean){
+    fun showPreviousLocation(show: Boolean) {
         previousLocation.value = show
     }
 
-    fun showOtherUserLocation(show : Boolean){
+    fun showOtherUserLocation(show: Boolean) {
         otherUserLocation.value = show
     }
 
-    fun setOtherUserEmail(value: String){
+    fun setOtherUserEmail(value: String) {
         otherUserEmail.value = value
     }
 
-    fun showSignOutDialogue(show : Boolean){
+    fun showSignOutDialogue(show: Boolean) {
         signOutDialogue.value = show
     }
 
-    fun showDeleteAccountDialogue(show : Boolean){
+    fun showDeleteAccountDialogue(show: Boolean) {
         deleteAccountDialogue.value = show
     }
 
-    fun setLogged(value: Boolean){
+    fun setLogged(value: Boolean) {
         isLogged.value = value
     }
 
 
-    fun setAllowAllConnections(allow: Boolean){
+    fun setAllowAllConnections(allow: Boolean) {
         allowAllConnections.value = allow
         sharedPreferencesConnection.setConnections(allowAllConnections.value!!)
     }
 
-    fun getAllowAllConnections(){
+    fun getAllowAllConnections() {
         allowAllConnections.value = sharedPreferencesConnection.getConnections()
     }
 
@@ -105,78 +114,115 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
         //El problema està aquí!!
     }
 
-    fun showSettingsDialogue(show : Boolean){
+    fun showSettingsDialogue(show: Boolean) {
         settingsDialogue.value = show
     }
 
-    fun setUserLongitude(longitude : Double){
+    fun setUserLongitude(longitude: Double) {
         userLongitude.value = longitude
     }
 
-    fun setUserLatitude(latitude : Double){
+    fun setUserLatitude(latitude: Double) {
         userLatitude.value = latitude
     }
 
-    fun setRecipient(recipienT: String){
+    fun setRecipient(recipienT: String) {
         recipient.value = recipienT
     }
-    fun changeRecipientValidity(valid: Boolean){
+
+    fun changeRecipientValidity(valid: Boolean) {
         valid_recipient.value = valid
     }
 
-    fun getTokens() : Int{
-        //return tokens.value!!
-        return sharedPreferencesData.getTokens()
+    fun getTokens(): Task<Int> {
+
+        val tokensTaskCompletionSource = TaskCompletionSource<Int>()
+
+        userDocRef.get().addOnSuccessListener { documentSnapshot ->
+            if (documentSnapshot.exists()) {
+                val tokens = documentSnapshot.getLong("tokens")?.toInt() ?: 0
+                _currentTokens.value = tokens
+                tokensTaskCompletionSource.setResult(tokens)
+
+            } else {
+                tokensTaskCompletionSource.setResult(0)
+            }
+        }.addOnFailureListener { exception ->
+            tokensTaskCompletionSource.setException(exception)
+        }
+        return tokensTaskCompletionSource.task
+    }
+
+    // Función para actualizar el número de tokens de un usuario
+    fun setTokens(newTokenAmount: Int): Task<Int> {
+        return getTokens().addOnSuccessListener { existingTokens ->
+            val updatedTokens = newTokenAmount + existingTokens
+            userDocRef.update("tokens", updatedTokens)
+        }
+        getTokens()
 
     }
 
-    fun setTokens(amount : Int){
-        //tokens.value = amount
-        sharedPreferencesData.saveTokens(amount, transactions.value!!)
-
+    fun getTokensMain(): Int? {
+        return currentTokens.value
     }
 
-    fun addTransaction(transaction: Transaction){
-        transactions.value!!.add(0,transaction)
+    fun sellTokens(tokensToSend: Int) {
+        // Verifica si hay suficientes tokens para vender
+        if (_currentTokens.value!! >= tokensToSend) {
+            // Resta los tokens vendidos de currentTokens
+            _currentTokens.value = _currentTokens.value!! - tokensToSend
+            // Actualiza los tokens en Firestore
+            setTokens(_currentTokens.value!!)
+        }
     }
 
-    fun showSendDialogue(show: Boolean){
+
+
+
+    fun addTransaction(transaction: Transaction) {
+        transactions.value!!.add(0, transaction)
+    }
+
+    fun showSendDialogue(show: Boolean) {
         send_dialogue.value = show
     }
 
-    fun changeValidityTokensToSend(valid : Boolean){
+    fun changeValidityTokensToSend(valid: Boolean) {
         valid_tokens_to_send.value = valid
     }
 
-    fun setTokensToSend(tokens_amount : Int){
+    fun setTokensToSend(tokens_amount: Int) {
         tokens_to_send.value = tokens_amount
     }
 
-    fun showBuyDialogue(show: Boolean){
+    fun showBuyDialogue(show: Boolean) {
         buy_dialogue.value = show
     }
-    fun showSellDialogue(show: Boolean){
+
+    fun showSellDialogue(show: Boolean) {
         sell_dialogue.value = show
     }
-    fun changeValidityTokensToSell(valid : Boolean){
+
+    fun changeValidityTokensToSell(valid: Boolean) {
         valid_tokens_to_sell.value = valid
     }
 
-    fun changeValidityTokensToBuy(valid : Boolean){
+    fun changeValidityTokensToBuy(valid: Boolean) {
         valid_tokens_to_buy.value = valid
     }
 
 
-    fun setTokensToBuy(tokens_amount : Int){
+    fun setTokensToBuy(tokens_amount: Int) {
         tokens_to_buy.value = tokens_amount
     }
 
-    fun setTokensToSell(tokens_amount : Int){
+    fun setTokensToSell(tokens_amount: Int) {
         tokens_to_sell.value = tokens_amount
     }
 
 
-    fun add1SettingsTimer(){
+    fun add1SettingsTimer() {
         settingsTimer.value = settingsTimer.value!! + 1
     }
 
@@ -186,61 +232,65 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
         selectedBuy.value = false
         selectedPlace.value = false
         selectedSettings.value = false
-        }
+    }
 
-    fun selectSettings(){
+    fun selectSettings() {
         selectedSettings.value = true
     }
-    fun selectHome(){
+
+    fun selectHome() {
         selectedHome.value = true
     }
 
-    fun selectSend(){
+    fun selectSend() {
         selectedArrow.value = true
     }
 
-    fun selectBuy(){
+    fun selectBuy() {
         selectedBuy.value = true
     }
 
-    fun selectPlace(){
+    fun selectPlace() {
         selectedPlace.value = true
     }
 
-    fun showClosingDialogue(){
+    fun showClosingDialogue() {
         closingDialogue.value = true
     }
 
-    fun hideClosingDialogue(){
+    fun hideClosingDialogue() {
         closingDialogue.value = false
     }
 
-    fun expand(){
+    fun expand() {
         expanded.value = true
     }
 
-    fun shrink(){
+    fun shrink() {
         expanded.value = false
     }
 
-    fun showConfigSnackBar(){
+    fun showConfigSnackBar() {
         configSnackBar.value = true
     }
 
-    fun removeConfigSnackBar(){
+    fun removeConfigSnackBar() {
         configSnackBar.value = false
     }
 
-    fun showOkSnackBar(){
+    fun showOkSnackBar() {
         okSnackBar.value = true
     }
 
-    fun removeOkSnackBar(){
+    fun removeOkSnackBar() {
         okSnackBar.value = false
     }
 
-    fun startApp(){
+    fun startApp() {
         startApp.value = true
     }
-
 }
+
+
+
+

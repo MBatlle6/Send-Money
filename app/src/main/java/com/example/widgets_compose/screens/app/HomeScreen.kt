@@ -19,6 +19,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +39,9 @@ import com.example.widgets_compose.ui.theme.Turquoise
     viewModel: SendMoneyViewModel,
     activity: ComponentActivity
 ) {
+
+    val currentTokens by viewModel.currentTokens.observeAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -53,7 +58,7 @@ import com.example.widgets_compose.ui.theme.Turquoise
         )
         if(viewModel.transactionTokens.value!!){
             Text(
-                text = viewModel.getTokens().toString()  + " " + activity.getString(R.string.tokens_abreviation),
+                text = "${currentTokens ?: 0}"  + " " + activity.getString(R.string.tokens_abreviation),
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold
             )
