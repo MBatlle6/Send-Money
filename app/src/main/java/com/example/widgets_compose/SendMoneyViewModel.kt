@@ -49,8 +49,7 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     val transactionDates = MutableLiveData(true)
     val resetPasswordEmailDialogue = MutableLiveData(false)
     val currentUser = auth.currentUser
-    val db = FirebaseFirestore.getInstance()
-    val userDocRef = db.collection("users").document(currentUser!!.uid)
+
     private val _currentTokens = MutableLiveData<Int>()
     val currentTokens: LiveData<Int> = _currentTokens
 
@@ -135,6 +134,8 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     }
 
     fun getTokens(): Task<Int> {
+        val db = FirebaseFirestore.getInstance()
+        val userDocRef = db.collection("users").document(currentUser!!.uid)
 
         val tokensTaskCompletionSource = TaskCompletionSource<Int>()
 
@@ -155,6 +156,8 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
 
     // Función para actualizar el número de tokens de un usuario
     fun setTokens(newTokenAmount: Int): Task<Int> {
+        val db = FirebaseFirestore.getInstance()
+        val userDocRef = db.collection("users").document(currentUser!!.uid)
         return getTokens().addOnSuccessListener { existingTokens ->
             val updatedTokens = newTokenAmount + existingTokens
             userDocRef.update("tokens", updatedTokens)
