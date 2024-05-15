@@ -139,6 +139,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+
         Firebase.messaging.token.addOnCompleteListener(
             OnCompleteListener { task ->
                 if (!task.isSuccessful) {
@@ -156,6 +157,8 @@ class MainActivity : ComponentActivity() {
                 Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
             },
         )
+
+
 
         networkStateMonitor = NetworkStateMonitor(this, viewModel)
         askNotificationPermission()
