@@ -140,6 +140,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+
         Firebase.messaging.token.addOnCompleteListener(
             OnCompleteListener { task ->
                 if (!task.isSuccessful) {
@@ -159,6 +160,8 @@ class MainActivity : ComponentActivity() {
                 Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
             },
         )
+
+
 
         networkStateMonitor = NetworkStateMonitor(this, viewModel)
         askNotificationPermission()
@@ -209,7 +212,7 @@ class MainActivity : ComponentActivity() {
             viewModel.resetPasswordEmailDialogue.observeAsState().value
             viewModel.transactionTokens.observeAsState().value
             viewModel.transactionDates.observeAsState().value
-            viewModel.getTokens()
+            //viewModel.getTokens()
 
             Widgets_ComposeTheme {
                 // A surface container using the 'background' color from the theme

@@ -4,6 +4,7 @@ import android.content.ContentValues.TAG
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Delete
@@ -55,65 +59,68 @@ fun SettingsScreen(
     if (viewModel.resetPasswordEmailDialogue.value!!){
         ResetPasswordEmailDialogue(activity = activity, viewModel = viewModel)
     }
-    Column(
-        modifier = Modifier.padding(16.dp)
+    LazyColumn(
+        modifier = Modifier
+            .padding(16.dp)
     ) {
-        Spacer(modifier = Modifier.height(48.dp))
-        Text(
-            text = activity.getString(R.string.network),
-            fontSize = 30.sp,
-            )
-        Spacer(modifier = Modifier.height(16.dp))
-        CheckList(viewModel = viewModel, activity = activity)
-        Spacer(modifier = Modifier.height(48.dp))
-        Text(
-            text = activity.getString(R.string.transactions),
-            fontSize = 30.sp,
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        TransactionsCheckList(viewModel = viewModel, activity = activity)
-        Spacer(modifier = Modifier.height(48.dp))
-        Row(verticalAlignment = Alignment.CenterVertically){
+        item {
+            Spacer(modifier = Modifier.height(48.dp))
             Text(
-                text = activity.getString(R.string.password),
+                text = activity.getString(R.string.network),
                 fontSize = 30.sp,
             )
-            Spacer(modifier = Modifier.width(120.dp))
-            Button(
-                onClick = {
-                    viewModel.showResetPasswordEmailDialogue(true)
-                },
-                colors = ButtonDefaults.buttonColors(Turquoise)
-            ) {
-                Icon(Icons.Filled.Refresh, contentDescription = "Reset password email")
+            Spacer(modifier = Modifier.height(16.dp))
+            CheckList(viewModel = viewModel, activity = activity)
+            Spacer(modifier = Modifier.height(48.dp))
+            Text(
+                text = activity.getString(R.string.transactions),
+                fontSize = 30.sp,
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            TransactionsCheckList(viewModel = viewModel, activity = activity)
+            Spacer(modifier = Modifier.height(48.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = activity.getString(R.string.password),
+                    fontSize = 30.sp,
+                )
+                Spacer(modifier = Modifier.width(120.dp))
+                Button(
+                    onClick = {
+                        viewModel.showResetPasswordEmailDialogue(true)
+                    },
+                    colors = ButtonDefaults.buttonColors(Turquoise)
+                ) {
+                    Icon(Icons.Filled.Refresh, contentDescription = "Reset password email")
+                }
             }
-        }
-        Spacer(modifier = Modifier.height(48.dp))
-        Row(verticalAlignment = Alignment.CenterVertically){
-            Text(
-                text = activity.getString(R.string.signOut),
-                fontSize = 30.sp,
-            )
-            Spacer(modifier = Modifier.width(140.dp))
-            Button(
-                onClick = {viewModel.showSignOutDialogue(true)},
-                colors = ButtonDefaults.buttonColors(Turquoise)
-            ) {
-                Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Sign Out")
+            Spacer(modifier = Modifier.height(48.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = activity.getString(R.string.signOut),
+                    fontSize = 30.sp,
+                )
+                Spacer(modifier = Modifier.width(140.dp))
+                Button(
+                    onClick = { viewModel.showSignOutDialogue(true) },
+                    colors = ButtonDefaults.buttonColors(Turquoise)
+                ) {
+                    Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Sign Out")
+                }
             }
-        }
-        Spacer(modifier = Modifier.height(48.dp))
-        Row(verticalAlignment = Alignment.CenterVertically){
-            Text(
-                text = activity.getString(R.string.deleteAccount),
-                fontSize = 30.sp,
-            )
-            Spacer(modifier = Modifier.width(50.dp))
-            Button(
-                onClick = {viewModel.showDeleteAccountDialogue(true)},
-                colors = ButtonDefaults.buttonColors(Color.Red)
-            ) {
-                Icon(imageVector = Icons.Filled.Delete, contentDescription = "Delete",)
+            Spacer(modifier = Modifier.height(48.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = activity.getString(R.string.deleteAccount),
+                    fontSize = 30.sp,
+                )
+                Spacer(modifier = Modifier.width(50.dp))
+                Button(
+                    onClick = { viewModel.showDeleteAccountDialogue(true) },
+                    colors = ButtonDefaults.buttonColors(Color.Red)
+                ) {
+                    Icon(imageVector = Icons.Filled.Delete, contentDescription = "Delete",)
+                }
             }
         }
     }
