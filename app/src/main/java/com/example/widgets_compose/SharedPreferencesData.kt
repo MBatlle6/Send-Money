@@ -27,6 +27,9 @@ class SharedPreferencesData private constructor(context: Context) {
         sharedPreferencesTranscations.edit().putString("transactions", json).apply()
     }
 
+    fun getTokens(): Int {
+        return sharedPreferences.getInt(TOKENS_KEY, 0)
+    }
 
 
     fun getTransactions(values: MutableList<Transaction>): MutableList<Transaction> {

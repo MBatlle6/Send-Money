@@ -115,11 +115,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
      * @param token The new token.
      */
     fun sendRegistrationToServer(token: String?) {
-        val currentUser = auth.getCurrentUser()
+        val currentUser = auth.currentUser
         val db = FirebaseFirestore.getInstance()
         val userDocRef = db.collection("users").document(currentUser!!.uid)
         userDocRef.update("fcmToken", token)
-        Log.d(TAG, "sendRegistrationTokenToServer($token)")
     }
 
     /**

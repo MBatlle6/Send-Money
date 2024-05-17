@@ -63,25 +63,18 @@ fun TokensToBuyWrittingButton(label: String, viewModel: SendMoneyViewModel) {
 
 @Composable
 fun TokensToSellWrittingButton(label: String, viewModel: SendMoneyViewModel) {
-
     val focusManager = LocalFocusManager.current
 
     OutlinedTextField(
-        isError = !viewModel.valid_tokens_to_sell.value!!,
+        isError = viewModel.tokens_to_sell.value!! > viewModel.currentTokens.value!!,
         leadingIcon = {
             Icon(imageVector = Icons.Filled.KeyboardArrowDown, contentDescription = "")
         },
-        value =
-        if(viewModel.tokens_to_sell.value == 0){
-            ""
-        } else {
-            viewModel.tokens_to_sell.value.toString()
-        },
-        onValueChange = {
-            if (!it.contains("[^0-9]".toRegex()) && it.length < 5  && it.isNotEmpty()) {
-                viewModel.setTokensToSell(it.toInt())
-            }
-            if (it.isEmpty()){
+        value = if (viewModel.tokens_to_sell.value == 0) "" else viewModel.tokens_to_sell.value.toString(),
+        onValueChange = { newValue ->
+            if (!newValue.contains("[^0-9]".toRegex()) && newValue.length < 5 && newValue.isNotEmpty()) {
+                viewModel.setTokensToSell(newValue.toInt())
+            } else if (newValue.isEmpty()) {
                 viewModel.setTokensToSell(0)
             }
         },
@@ -126,7 +119,7 @@ fun SellTokensButton(label: String, viewModel: SendMoneyViewModel){
     Button(
         colors = ButtonDefaults.buttonColors(Turquoise),
         onClick = {
-            if(viewModel.tokens_to_sell.value == 0 ){
+            if(viewModel.tokens_to_sell.value == 0 || viewModel.tokensToSendInput > viewModel.currentTokens.value!!){
                 viewModel.changeValidityTokensToSell(false)
             }else{
                 viewModel.changeValidityTokensToSell(true)
@@ -173,12 +166,12 @@ fun TokensToSendWrittingButton(label: String, viewModel: SendMoneyViewModel) {
     val focusManager = LocalFocusManager.current
 
     OutlinedTextField(
-        isError = !viewModel.valid_tokens_to_send.value!!,
+        isError = viewModel.tokensToSendInput > viewModel.currentTokens.value!!,
         leadingIcon = {
             Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = "")
         },
         value =
-        if(viewModel.tokens_to_send.value == 0){
+        if(viewModel.tokens_to_send.value == 1){
             ""
         } else {
             viewModel.tokens_to_send.value.toString()
@@ -186,9 +179,10 @@ fun TokensToSendWrittingButton(label: String, viewModel: SendMoneyViewModel) {
         onValueChange = {
             if (!it.contains("[^0-9]".toRegex()) && it.length < 5  && it.isNotEmpty()) {
                 viewModel.setTokensToSend(it.toInt())
+                viewModel.tokensToSendInput = it.toInt()
             }
             if (it.isEmpty()){
-                viewModel.setTokensToSend(0)
+
             }
         },
         singleLine = true,
@@ -210,12 +204,12 @@ fun SendTokensButton(label: String, viewModel: SendMoneyViewModel){
     Button(
         colors = ButtonDefaults.buttonColors(Turquoise),
         onClick = {
-            if(viewModel.tokens_to_send.value == 0){
+            if(viewModel.tokens_to_send.value == 0 || viewModel.tokensToSendInput > viewModel.currentTokens.value!!){
                 viewModel.changeValidityTokensToSend(false)
             }else{
                 viewModel.changeValidityTokensToSend(true)
                 viewModel.showSendDialogue(true)
-                viewModel.sellTokens(tokensToSend = 100)
+                viewModel.sendTokens(viewModel.recipient.toString() )
             }
         }
     ) {
