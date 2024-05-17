@@ -59,11 +59,11 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     val transactionTokens = MutableLiveData(true)
     val transactionDates = MutableLiveData(true)
     val resetPasswordEmailDialogue = MutableLiveData(false)
+
     private val db = FirebaseFirestore.getInstance()
     var tokensToSendInput: Int = 0
     val location = MutableLiveData<GeoPoint>()
     val locationLL = MutableLiveData<LatLng>()
-
 
     private val _currentTokens = MutableLiveData<Int>()
     val currentTokens: LiveData<Int> = _currentTokens

@@ -19,8 +19,11 @@ const {getFirestore} = require("firebase-admin/firestore");
 const functions = require("firebase-functions");
 // Import and initialize the Firebase Admin SDK.
 const admin = require("firebase-admin");
+const {onDocumentUpdated} = require("firebase-functions/v2/firestore");
 
 initializeApp();
+const db = getFirestore();
+const fcm = admin.messaging();
 
 // Take the text parameter passed to this HTTP endpoint and insert it into
 // Firestore under the path /messages/:documentId/original
@@ -35,6 +38,7 @@ exports.addmessage = onRequest(async (req, res) => {
   res.json({result: `Message with ID: ${writeResult.id} added.`});
 });
 
+
 // Adds a message that welcomes new users into the chat.
 exports.addWelcomeMessages = functions.auth.user().onCreate(async (user) => {
   functions.logger.log("A new user signed in for the first time.");
@@ -45,10 +49,37 @@ exports.addWelcomeMessages = functions.auth.user().onCreate(async (user) => {
   await admin.firestore().collection("messages").add({
     name: "Firebase Bot",
     profilePicUrl: "/images/firebase-logo.png", // Firebase logo
-    text: "${fullName} signed in for the first time! Welcome!",
+    text: "Signed in for the first time! Welcome!",
     timestamp: admin.firestore.FieldValue.serverTimestamp(),
   });
   functions.logger.log("Welcome message written to database.");
+});
+
+exports.sendNotificationLowAmountTokens =
+onDocumentUpdated("users/{userId}", async (event) => {
+  const tokensAmount = event.data.after.data().tokens;
+
+  if (tokensAmount < 5) {
+    const querySnapshot = await db.collection("users").get();
+
+    const notificationPayload = {
+      notification: {
+        title: "Low Token Balance",
+        body: `Your token balance is low. Please add more tokens.`,
+      },
+    };
+
+    const promises = [];
+
+    querySnapshot.forEach((doc) => {
+      const token = doc.data().fcmToken;
+      if (token) {
+        promises.push(fcm.sendToDevice(token, notificationPayload));
+      }
+    });
+
+    await Promise.all(promises);
+  }
 });
 
 
