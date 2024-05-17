@@ -51,10 +51,7 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     val transactionDates = MutableLiveData(true)
     val resetPasswordEmailDialogue = MutableLiveData(false)
     val currentUser = auth.currentUser
-<<<<<<< HEAD
-=======
 
->>>>>>> 4a06226852111d64c6255148120aa5886abe9df0
     private val _currentTokens = MutableLiveData<Int>()
     val currentTokens: LiveData<Int> = _currentTokens
 
@@ -141,10 +138,7 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     fun getTokens(): Task<Int> {
         val db = FirebaseFirestore.getInstance()
         val userDocRef = db.collection("users").document(currentUser!!.uid)
-<<<<<<< HEAD
-=======
 
->>>>>>> 4a06226852111d64c6255148120aa5886abe9df0
         val tokensTaskCompletionSource = TaskCompletionSource<Int>()
 
         userDocRef.get().addOnSuccessListener { documentSnapshot ->
