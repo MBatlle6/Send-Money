@@ -90,7 +90,6 @@ fun LocationScreen(
             Button(
                 onClick = {
                     viewModel.showOtherUserLocation(true)
-                    viewModel.setOtherUserEmail("")
                           },
                 colors = ButtonDefaults.buttonColors(Turquoise)
             )
@@ -178,7 +177,8 @@ fun UserCurrentLocation(viewModel: SendMoneyViewModel, activity: MainActivity){
 
 @Composable
 fun OtherUserLocation(viewModel: SendMoneyViewModel, activity: MainActivity){
-    val myLocation = LatLng(viewModel.userLatitude.value!!, viewModel.userLongitude.value!!)
+    viewModel.getLatitudeAndLongitudeByEmail()
+    val myLocation = LatLng(viewModel.otherUserLatitude.value!!, viewModel.otherUserLongitude.value!!)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(myLocation, 10f)
     }

@@ -12,6 +12,7 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.android.gms.auth.api.Auth
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
 
 private val providers = arrayListOf(
     AuthUI.IdpConfig.GoogleBuilder().build(),
@@ -45,8 +46,9 @@ fun onSignInResult(result: FirebaseAuthUIAuthenticationResult, activity: MainAct
     if (result.resultCode == RESULT_OK) {
         // Successfully signed in
         val currentUser = auth.currentUser
+        val userLocation = GeoPoint(viewModel.userLatitude.value!!.toDouble(), viewModel.userLongitude.value!!.toDouble())
         val db = FirebaseFirestore.getInstance()
-        val userRef = db.collection("users").document(currentUser!!.uid)
+        val userRef = db.collection("users").document(currentUser!!.email.toString())
         Toast.makeText(activity, "User signed in ${currentUser.email}", Toast.LENGTH_SHORT)
             .show()
 
@@ -58,8 +60,8 @@ fun onSignInResult(result: FirebaseAuthUIAuthenticationResult, activity: MainAct
                         "uid" to currentUser.uid,
                         "email" to currentUser.email,
                         "tokens" to 0,
-                        "location" to mapOf("latitude" to viewModel.userLatitude, "longitude" to viewModel.userLongitude),
-                        "fcmToken" to 0,
+                        "location" to userLocation,
+                        "fcmToken" to 0
                     )
 
                     userRef.set(user).addOnSuccessListener {

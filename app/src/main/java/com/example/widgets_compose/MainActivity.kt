@@ -189,7 +189,11 @@ class MainActivity : ComponentActivity() {
             viewModel.valid_tokens_to_sell.observeAsState().value
             viewModel.valid_tokens_to_send.observeAsState().value
             viewModel.buy_dialogue.observeAsState().value
+            viewModel.otherUserLocation.observeAsState().value
+            viewModel.otherUserLatitude.observeAsState().value
+            viewModel.otherUserLongitude.observeAsState().value
             viewModel.sell_dialogue.observeAsState().value
+            viewModel.location.observeAsState().value
             viewModel.send_dialogue.observeAsState().value
             viewModel.recipient.observeAsState().value
             viewModel.valid_recipient.observeAsState().value

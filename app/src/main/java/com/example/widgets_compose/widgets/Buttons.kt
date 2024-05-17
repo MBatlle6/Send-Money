@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_EXPRESSION")
+
 package com.example.widgets_compose.widgets
 
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,8 +33,7 @@ fun TokensToBuyWrittingButton(label: String, viewModel: SendMoneyViewModel) {
 
     OutlinedTextField(
         isError = !viewModel.valid_tokens_to_buy.value!!,
-        value =
-        if(viewModel.tokens_to_buy.value == 0){
+        value = if(viewModel.tokens_to_buy.value == 0){
             ""
         } else {
             viewModel.tokens_to_buy.value.toString()
@@ -66,7 +67,8 @@ fun TokensToSellWrittingButton(label: String, viewModel: SendMoneyViewModel) {
     val focusManager = LocalFocusManager.current
 
     OutlinedTextField(
-        isError = viewModel.tokens_to_sell.value!! > viewModel.currentTokens.value!!,
+        isError = viewModel.tokens_to_sell.value != null && viewModel.currentTokens.value != null &&
+                viewModel.tokens_to_sell.value!! > viewModel.currentTokens.value!!,
         leadingIcon = {
             Icon(imageVector = Icons.Filled.KeyboardArrowDown, contentDescription = "")
         },
@@ -103,7 +105,6 @@ fun BuyTokensButton(label: String, viewModel: SendMoneyViewModel){
                 viewModel.changeValidityTokensToBuy(true)
                 viewModel.showBuyDialogue(true)
                 print("Buy Tokens")
-                //Buy Tokens
             }
         }
     ) {
@@ -115,16 +116,16 @@ fun BuyTokensButton(label: String, viewModel: SendMoneyViewModel){
 }
 
 @Composable
-fun SellTokensButton(label: String, viewModel: SendMoneyViewModel){
+fun SellTokensButton(label: String, viewModel: SendMoneyViewModel) {
     Button(
         colors = ButtonDefaults.buttonColors(Turquoise),
         onClick = {
-            if(viewModel.tokens_to_sell.value == 0 || viewModel.tokensToSendInput > viewModel.currentTokens.value!!){
+            if (viewModel.tokens_to_sell.value == 0 || viewModel.tokensToSendInput > viewModel.currentTokens.value!!
+            ) {
                 viewModel.changeValidityTokensToSell(false)
-            }else{
+            } else {
                 viewModel.changeValidityTokensToSell(true)
                 viewModel.showSellDialogue(true)
-
             }
         }
     ) {
@@ -166,23 +167,17 @@ fun TokensToSendWrittingButton(label: String, viewModel: SendMoneyViewModel) {
     val focusManager = LocalFocusManager.current
 
     OutlinedTextField(
-        isError = viewModel.tokensToSendInput > viewModel.currentTokens.value!!,
+        isError = viewModel.currentTokens.value != null && viewModel.tokensToSendInput > viewModel.currentTokens.value!!,
         leadingIcon = {
             Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = "")
         },
-        value =
-        if(viewModel.tokens_to_send.value == 1){
-            ""
-        } else {
-            viewModel.tokens_to_send.value.toString()
-        },
-        onValueChange = {
-            if (!it.contains("[^0-9]".toRegex()) && it.length < 5  && it.isNotEmpty()) {
-                viewModel.setTokensToSend(it.toInt())
-                viewModel.tokensToSendInput = it.toInt()
-            }
-            if (it.isEmpty()){
-
+        value = if (viewModel.tokens_to_send.value == 0) "" else viewModel.tokens_to_send.value.toString(),
+        onValueChange = { newValue ->
+            if (!newValue.contains("[^0-9]".toRegex()) && newValue.length < 5 && newValue.isNotEmpty()) {
+                viewModel.setTokensToSend(newValue.toInt())
+                viewModel.tokensToSendInput = newValue.toInt()
+            } else if (newValue.isEmpty()) {
+                null
             }
         },
         singleLine = true,
@@ -198,18 +193,18 @@ fun TokensToSendWrittingButton(label: String, viewModel: SendMoneyViewModel) {
     )
 }
 
-
 @Composable
-fun SendTokensButton(label: String, viewModel: SendMoneyViewModel){
+fun SendTokensButton(label: String, viewModel: SendMoneyViewModel) {
     Button(
         colors = ButtonDefaults.buttonColors(Turquoise),
         onClick = {
-            if(viewModel.tokens_to_send.value == 0 || viewModel.tokensToSendInput > viewModel.currentTokens.value!!){
+            if (viewModel.tokens_to_send.value == 0 ||
+                (viewModel.currentTokens.value != null && viewModel.tokensToSendInput > viewModel.currentTokens.value!!)
+            ) {
                 viewModel.changeValidityTokensToSend(false)
-            }else{
+            } else {
                 viewModel.changeValidityTokensToSend(true)
                 viewModel.showSendDialogue(true)
-                viewModel.sendTokens(viewModel.recipient.toString() )
             }
         }
     ) {

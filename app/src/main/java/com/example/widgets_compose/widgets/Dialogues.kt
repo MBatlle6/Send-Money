@@ -87,7 +87,7 @@ fun SellDialogue(viewModel: SendMoneyViewModel, activity: MainActivity){
                     viewModel.showSellDialogue(false)
                     viewModel.addTransaction(
                         Transaction(activity.getString(R.string.me), activity.getString(R.string.bank),
-                            LocalDate.now(), viewModel.tokens_to_sell.value!!)
+                            LocalDate.now(), viewModel.tokens_to_send.value!!)
                     )
                     viewModel.setTokens(viewModel.tokens.value!! - viewModel.tokens_to_sell.value!!)
                     viewModel.setTokensToSell(0)
@@ -123,7 +123,7 @@ fun SendDialogue(viewModel: SendMoneyViewModel, activity: MainActivity){
                         Transaction(activity.getString(R.string.me), viewModel.recipient.value!!,
                             LocalDate.now(), viewModel.tokens_to_send.value!!)
                     )
-                    viewModel.setTokens(viewModel.tokens.value!! - viewModel.tokens_to_send.value!!)
+                    viewModel.sendTokens()
                     viewModel.setTokensToSend(0)
                     viewModel.setRecipient("")
                     backAction(viewModel)
@@ -222,6 +222,7 @@ fun DeleteAccountDialogue(activity: MainActivity, viewModel: SendMoneyViewModel)
                         if (task.isSuccessful) {
                             // Deletion succeeded, show a success toast
                             Toast.makeText(activity, "Account deleted successfully!", Toast.LENGTH_SHORT).show()
+                            viewModel.deleteAccount()
                             Log.d("UserDeletion", "User account deleted.")
                         } else {
                             // Deletion failed, show an error toast and print the exception message
