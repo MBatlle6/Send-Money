@@ -28,7 +28,7 @@ fun BaseScreen(
         topBar = { TopBar(viewModel = viewModel, activity) },
         content = {
             if(viewModel.selectedHome.value == true){
-                viewModel.getTransaction()
+                //viewModel.getTransaction()
                 HomeScreen(viewModel, activity)
             }
             else if (viewModel.selectedArrow.value == true) SendScreen(viewModel, activity)

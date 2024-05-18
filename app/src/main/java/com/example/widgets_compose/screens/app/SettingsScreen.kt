@@ -179,10 +179,10 @@ fun TransactionsCheckList(
             checked = viewModel.transactionDates.value!!,
             onCheckedChange = {
                 if (!viewModel.transactionDates.value!!){
-                    viewModel.showTransactionDates(true)
+                  //  viewModel.showTransactionDates(true)
                 }
                 else{
-                    viewModel.showTransactionDates(false)
+                    //viewModel.showTransactionDates(false)
                 }
             },
         )

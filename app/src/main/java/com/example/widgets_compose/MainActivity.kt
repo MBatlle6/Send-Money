@@ -157,7 +157,6 @@ class MainActivity : ComponentActivity() {
             viewModel.selectedArrow.observeAsState().value
             viewModel.selectedBuy.observeAsState().value
             viewModel.closingDialogue.observeAsState().value
-            viewModel.transactions.observeAsState().value
             viewModel.expanded.observeAsState().value
             viewModel.configSnackBar.observeAsState().value
             viewModel.okSnackBar.observeAsState().value
@@ -194,6 +193,7 @@ class MainActivity : ComponentActivity() {
             viewModel.resetPasswordEmailDialogue.observeAsState().value
             viewModel.transactionTokens.observeAsState().value
             viewModel.transactionDates.observeAsState().value
+            viewModel.transactions.observeAsState().value
 
             if (auth.currentUser != null){
                 viewModel.getTokens()

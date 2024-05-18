@@ -148,7 +148,7 @@ fun RecipientWritingButton(label: String, viewModel: SendMoneyViewModel) {
         value = viewModel.recipient.value ?: "",
         onValueChange = {
             viewModel.setRecipient(it)
-            if (it.isEmpty()) {
+            if (viewModel.recipient.value.toString() == "") {
                 viewModel.showSendDialogue(false)
             }
         },

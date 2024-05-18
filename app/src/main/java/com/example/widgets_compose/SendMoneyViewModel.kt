@@ -14,6 +14,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.tasks.await
+import java.time.LocalDate
 import com.google.android.gms.maps.model.LatLng as LatLng1
 
 @Suppress("UNREACHABLE_CODE", "DEPRECATION")
@@ -63,18 +64,83 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     private val db = FirebaseFirestore.getInstance()
     var tokensToSendInput: Int = 0
     val location = MutableLiveData<GeoPoint>()
-    val locationLL = MutableLiveData<LatLng>()
 
     private val _currentTokens = MutableLiveData<Int>()
     val currentTokens: LiveData<Int> = _currentTokens
 
-    val transactions = MutableLiveData<MutableList<Transaction>>(
-        mutableListOf()
-    )
+    val transactions = MutableLiveData<MutableList<Transaction>>(mutableListOf())
 
-    fun showTransactionDates(show: Boolean) {
-        transactionDates.value = show
+
+    fun addTransaction(transaction: Transaction) {
+        val db = FirebaseFirestore.getInstance()
+        val userEmail = getCurrentUser()!!.email.toString()
+
+        db.collection("users").document(userEmail).get()
+            .addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val currentTransactions = documentSnapshot.get("transactions") as? List<Map<String, Any>> ?: emptyList()
+
+                    val updatedTransactions = currentTransactions.toMutableList()
+
+                    updatedTransactions.add(0, mapOf(
+                        "SENDER" to transaction.SENDER,
+                        "RECIPIENT" to transaction.RECIPIENT,
+                        "DATE" to transaction.DATE.toString(),
+                        "AMOUNT" to transaction.AMOUNT
+                    ))
+
+                    db.collection("users").document(userEmail).update("transactions", updatedTransactions)
+                        .addOnSuccessListener {
+                            Log.d("Firestore", "Transacción añadida con éxito")
+                            // También actualizar las transacciones localmente
+                            transactions.postValue(updatedTransactions.map {
+                                Transaction(
+                                    SENDER = it["SENDER"] as String,
+                                    RECIPIENT = it["RECIPIENT"] as String,
+                                    DATE = LocalDate.parse(it["DATE"] as String),
+                                    AMOUNT = (it["AMOUNT"] as Number).toInt()
+                                )
+                            }.toMutableList())
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w("Firestore", "Error al añadir la transacción", e)
+                        }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.w("Firestore", "Error al leer las transacciones existentes", e)
+            }
     }
+
+    fun getTransactionsFromFirestore() {
+        val db = FirebaseFirestore.getInstance()
+        val userEmail = getCurrentUser()!!.email
+
+        db.collection("users").document(userEmail.toString()).get()
+            .addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val transactionsList = documentSnapshot.get("transactions") as? List<Map<String, Any>> ?: emptyList()
+
+                    val transactionsData = transactionsList.map {
+                        Transaction(
+                            SENDER = it["SENDER"] as String,
+                            RECIPIENT = it["RECIPIENT"] as String,
+                            DATE = LocalDate.parse(it["DATE"] as String),
+                            AMOUNT = (it["AMOUNT"] as Number).toInt()
+                        )
+                    }
+
+                    transactions.postValue(transactionsData.toMutableList())
+                } else {
+                    Log.d("Firestore", "No se encontró el documento del usuario con el email: $userEmail")
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Error al obtener las transacciones del usuario", e)
+            }
+    }
+
+
 
     fun showTransactionTokens(show: Boolean) {
         transactionTokens.value = show
@@ -120,12 +186,6 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
 
     fun getAllowAllConnections() {
         allowAllConnections.value = sharedPreferencesConnection.getConnections()
-    }
-
-
-    fun getTransaction() {
-        transactions.value = sharedPreferencesData.getTransactions(transactions.value!!)
-        //El problema està aquí!!
     }
 
     fun showSettingsDialogue(show: Boolean) {
@@ -193,17 +253,19 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
             if (documentSnapshot.exists()) {
                 val tokens = documentSnapshot.getLong("tokens")?.toInt() ?: 0
                 _currentTokens.value = tokens
-                tokensTaskCompletionSource.setResult(tokens)
 
+                getTransactionsFromFirestore()
+
+                tokensTaskCompletionSource.setResult(tokens)
             } else {
                 tokensTaskCompletionSource.setResult(0)
             }
         }.addOnFailureListener { exception ->
             tokensTaskCompletionSource.setException(exception)
         }
+
         return tokensTaskCompletionSource.task
     }
-
 
 
     fun setTokens(newTokenAmount: Int): Task<Int> {
@@ -213,7 +275,6 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
         return getTokens().addOnSuccessListener { existingTokens ->
             val updatedTokens = newTokenAmount + existingTokens
             userDocRef.update("tokens", updatedTokens)
-            val newAmount = updatedTokens
             val updates = mapOf(
                 "location" to mapOf(
                     "latitude" to userLatitude,
@@ -227,7 +288,6 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
             getTokens()
             userDocRef.update(updates)
             userDocRef.update(updates2)
-            //sharedPreferencesData.saveTokens(updatedTokens, newTokenAmount)
         }
 
     }
@@ -236,8 +296,6 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     fun sendTokens() {
         val currentUserUid = auth.currentUser?.email.toString()
         val tokensToSend = tokensToSendInput
-
-        //updateRecipientTokens(tokensToSend)
         subtractTokensFromSender(currentUserUid, tokensToSend)
 
     }
@@ -250,9 +308,7 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
         return db.collection("users").document(uid)
             .update("tokens", FieldValue.increment(-tokensToSubtract.toLong()))
     }
-    fun addTransaction(transaction: Transaction) {
-        transactions.value!!.add(0, transaction)
-    }
+
 
     fun showSendDialogue(show: Boolean) {
         send_dialogue.value = show
