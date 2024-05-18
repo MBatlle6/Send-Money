@@ -142,29 +142,9 @@ class MainActivity : ComponentActivity() {
         }
 
 
-        Firebase.messaging.token.addOnCompleteListener(
-            OnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    Log.w(TAG, "Fetching FCM registration token failed", task.exception)
-                    return@OnCompleteListener
-                }
 
-                // Get new FCM registration token
-                val token = task.result
-                //cal myClass = MyFirebaseMessagingService()
-                //myClass.sendRegistrationToServer(token)
-
-                val msg = getString(R.string.msg_token_fmt, token)
-                Log.d(TAG, msg)
-
-                Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-            },
-        )
         networkStateMonitor = NetworkStateMonitor(this, viewModel)
         askNotificationPermission()
-
-
-
     }
 
 
@@ -247,7 +227,28 @@ class MainActivity : ComponentActivity() {
                         if(!isAuthClient() && !viewModel.isLogged.value!!){
                             signInLauncher.launch(getAuthIntent())
                         }
+                        if (viewModel.isLogged.value!!){
+                            Firebase.messaging.token.addOnCompleteListener(
+                                OnCompleteListener { task ->
+                                    if (!task.isSuccessful) {
+                                        Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                                        return@OnCompleteListener
+                                    }
+
+                                    // Get new FCM registration token
+                                    val token = task.result
+                                    val myClass = MyFirebaseMessagingService()
+                                    if(isAuthClient())myClass.sendRegistrationToServer(token)
+
+                                    val msg = getString(R.string.msg_token_fmt, token)
+                                    Log.d(TAG, msg)
+
+                                    //Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+                                },
+                            )
+                        }
                         BaseScreen(viewModel = viewModel, this/*, sharedPreferencesData*/)
+
                     }
                 }
             }

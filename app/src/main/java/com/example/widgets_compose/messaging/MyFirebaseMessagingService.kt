@@ -117,7 +117,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     fun sendRegistrationToServer(token: String?) {
         val currentUser = auth.currentUser
         val db = FirebaseFirestore.getInstance()
-        val userDocRef = db.collection("users").document(currentUser!!.uid)
+        val userDocRef = db.collection("users").document(currentUser!!.email!!)
         userDocRef.update("fcmToken", token)
     }
 
@@ -141,7 +141,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.sendmoney_logo)
-            .setContentTitle("Hola")
+            //.setContentTitle("Hola")
             .setContentText(messageBody)
             .setAutoCancel(true)
             .setSound(defaultSoundUri)
