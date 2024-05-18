@@ -100,8 +100,8 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
         viewModel.getAllowAllConnections()
+        viewModel.getShowTransactionTokens()
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        //calculateTokens(viewModel, this)
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
         /*

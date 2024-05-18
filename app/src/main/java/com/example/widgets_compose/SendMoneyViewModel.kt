@@ -4,21 +4,16 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.widgets_compose.messaging.MyFirebaseMessagingService
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.TaskCompletionSource
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
-import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
-import com.google.android.gms.maps.model.LatLng as LatLng1
 
 @Suppress("UNREACHABLE_CODE", "DEPRECATION")
-class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesData, private val sharedPreferencesConnection:SharedPreferencesData ): ViewModel() {
+class SendMoneyViewModel(private val sharedPreferencesShowTokens:SharedPreferencesData,private val sharedPreferencesConnection: SharedPreferencesData ): ViewModel() {
 
 
     val selectedHome = MutableLiveData<Boolean>(true)
@@ -60,6 +55,7 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     val transactionTokens = MutableLiveData(true)
     val transactionDates = MutableLiveData(true)
     val resetPasswordEmailDialogue = MutableLiveData(false)
+
 
     private val db = FirebaseFirestore.getInstance()
     var tokensToSendInput: Int = 0
@@ -144,6 +140,23 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
 
     fun showTransactionTokens(show: Boolean) {
         transactionTokens.value = show
+        sharedPreferencesShowTokens.showTokens(transactionTokens.value!!)
+
+
+    }
+
+    fun getShowTransactionTokens(){
+        transactionTokens.value = sharedPreferencesShowTokens.getShowTokens()
+    }
+
+    fun setAllowAllConnections(allow: Boolean) {
+        allowAllConnections.value = allow
+        sharedPreferencesConnection.setConnections(allowAllConnections.value!!)
+    }
+
+
+    fun getAllowAllConnections() {
+        allowAllConnections.value = sharedPreferencesConnection.getConnections()
     }
 
     fun showResetPasswordEmailDialogue(show: Boolean) {
@@ -179,15 +192,6 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
     }
 
 
-    fun setAllowAllConnections(allow: Boolean) {
-        allowAllConnections.value = allow
-        sharedPreferencesConnection.setConnections(allowAllConnections.value!!)
-    }
-
-    fun getAllowAllConnections() {
-        allowAllConnections.value = sharedPreferencesConnection.getConnections()
-    }
-
     fun showSettingsDialogue(show: Boolean) {
         settingsDialogue.value = show
     }
@@ -212,9 +216,7 @@ class SendMoneyViewModel(private val sharedPreferencesData: SharedPreferencesDat
         return auth.currentUser
     }
 
-    fun getFireStoreDb (): FirebaseFirestore {
-        return FirebaseFirestore.getInstance()
-    }
+
 
    fun getDatabase () : FirebaseFirestore {
         return FirebaseFirestore.getInstance()

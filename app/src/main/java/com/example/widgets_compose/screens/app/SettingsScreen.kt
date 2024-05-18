@@ -176,25 +176,6 @@ fun TransactionsCheckList(
         verticalAlignment = Alignment.CenterVertically // Add this line
     ) {
         Checkbox(
-            checked = viewModel.transactionDates.value!!,
-            onCheckedChange = {
-                if (!viewModel.transactionDates.value!!){
-                  //  viewModel.showTransactionDates(true)
-                }
-                else{
-                    //viewModel.showTransactionDates(false)
-                }
-            },
-        )
-        Text(
-            text = activity.getString(R.string.showDates),
-            fontSize = 20.sp,
-        )
-    }
-    Row(
-        verticalAlignment = Alignment.CenterVertically // Add this line
-    ) {
-        Checkbox(
             checked = viewModel.transactionTokens.value!!,
             onCheckedChange = {
                 if (!viewModel.transactionTokens.value!!){
