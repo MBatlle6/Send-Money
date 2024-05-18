@@ -120,7 +120,7 @@ fun SellTokensButton(label: String, viewModel: SendMoneyViewModel) {
     Button(
         colors = ButtonDefaults.buttonColors(Turquoise),
         onClick = {
-            if (viewModel.tokens_to_sell.value == 0 || viewModel.tokensToSendInput > viewModel.currentTokens.value!!
+            if (viewModel.tokens_to_sell.value == 0 || viewModel.tokens_to_sell.value!! > viewModel.currentTokens.value!!
             ) {
                 viewModel.changeValidityTokensToSell(false)
             } else {
@@ -140,14 +140,17 @@ fun SellTokensButton(label: String, viewModel: SendMoneyViewModel) {
 @Composable
 fun RecipientWritingButton(label: String, viewModel: SendMoneyViewModel) {
     val focusManager = LocalFocusManager.current
+
     OutlinedTextField(
-        //Afegir isError en la fase del Firebase
         leadingIcon = {
             Icon(imageVector = Icons.Filled.Email, contentDescription = "")
         },
-        value = viewModel.recipient.value!!,
+        value = viewModel.recipient.value ?: "",
         onValueChange = {
             viewModel.setRecipient(it)
+            if (it.isEmpty()) {
+                viewModel.showSendDialogue(false)
+            }
         },
         label = { Text(text = label) },
         singleLine = true,
@@ -155,8 +158,8 @@ fun RecipientWritingButton(label: String, viewModel: SendMoneyViewModel) {
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Done
         ),
-        modifier =
-        Modifier.padding(0.dp, 50.dp, 0.dp, 20.dp)
+        modifier = Modifier
+            .padding(0.dp, 50.dp, 0.dp, 20.dp)
             .fillMaxWidth(),
         keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
     )

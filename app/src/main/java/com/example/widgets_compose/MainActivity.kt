@@ -151,7 +151,7 @@ class MainActivity : ComponentActivity() {
 
                 // Get new FCM registration token
                 val token = task.result
-                //cal myClass = MyFirebaseMessagingService()
+                //val myClass = MyFirebaseMessagingService()
                 //myClass.sendRegistrationToServer(token)
 
                 val msg = getString(R.string.msg_token_fmt, token)
