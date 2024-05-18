@@ -22,7 +22,6 @@ const admin = require("firebase-admin");
 const {onDocumentUpdated} = require("firebase-functions/v2/firestore");
 
 initializeApp();
-const db = getFirestore();
 const fcm = admin.messaging();
 
 // Take the text parameter passed to this HTTP endpoint and insert it into
@@ -56,29 +55,43 @@ exports.addWelcomeMessages = functions.auth.user().onCreate(async (user) => {
 });
 
 exports.sendNotificationLowAmountTokens =
-onDocumentUpdated("users/{userId}", async (event) => {
+onDocumentUpdated("users/{userId}", async (event, context) => {
   const tokensAmount = event.data.after.data().tokens;
 
-  if (tokensAmount < 5) {
-    const querySnapshot = await db.collection("users").get();
+  if (tokensAmount == 0) {
+    const token = event.data.after.data().fcmToken;
 
-    const notificationPayload = {
-      notification: {
-        title: "Low Token Balance",
-        body: `Your token balance is low. Please add more tokens.`,
-      },
-    };
+    if (token) {
+      const notificationPayload = {
+        notification: {
+          title: "Low Token Balance",
+          body: `Your token balance is low. Please add more tokens.`,
+        },
+      };
 
-    const promises = [];
+      fcm.sendToDevice(token, notificationPayload);
+    }
+  }
+});
 
-    querySnapshot.forEach((doc) => {
-      const token = doc.data().fcmToken;
-      if (token) {
-        promises.push(fcm.sendToDevice(token, notificationPayload));
-      }
-    });
+exports.sendNotificationTokensIncome =
+onDocumentUpdated("users/{userId}", async (event, context) => {
+  const previousTokensAmount = event.data.before.data().tokens;
+  const currentTokensAmount = event.data.after.data().tokens;
 
-    await Promise.all(promises);
+  if (currentTokensAmount > previousTokensAmount) {
+    const token = event.data.after.data().fcmToken;
+
+    if (token) {
+      const notificationPayload = {
+        notification: {
+          title: "Tokens Income",
+          body: "You've had a tokens income",
+        },
+      };
+
+      fcm.sendToDevice(token, notificationPayload);
+    }
   }
 });
 
