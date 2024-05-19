@@ -259,16 +259,18 @@ class SendMoneyViewModel(private val sharedPreferencesShowTokens:SharedPreferenc
     }
 
     private fun checkEmailExists(email: String) {
-        db.collection("users")
-            .whereEqualTo("email", email)
-            .get()
-            .addOnSuccessListener { documents ->
-                _isEmailValid.value = !documents.isEmpty
-            }
-            .addOnFailureListener {
-                _isEmailValid.value = false
-            }
-    }
+            db.collection("users")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnSuccessListener { documents ->
+                    if (email != getCurrentUser()!!.email) {
+                        _isEmailValid.value = !documents.isEmpty
+                    }
+                }
+                .addOnFailureListener {
+                    _isEmailValid.value = false
+                }
+        }
 
     fun showSignOutDialogue(show: Boolean) {
         signOutDialogue.value = show
@@ -305,7 +307,9 @@ class SendMoneyViewModel(private val sharedPreferencesShowTokens:SharedPreferenc
             .whereEqualTo("email", email)
             .get()
             .addOnSuccessListener { documents ->
-                _isEmailValidLocation.value = !documents.isEmpty
+                if (email != getCurrentUser()!!.email) {
+                    _isEmailValidLocation.value = !documents.isEmpty
+                }
             }
             .addOnFailureListener {
                 _isEmailValidLocation.value = false
@@ -322,7 +326,7 @@ class SendMoneyViewModel(private val sharedPreferencesShowTokens:SharedPreferenc
 
 
 
-   fun getDatabase () : FirebaseFirestore {
+    fun getDatabase () : FirebaseFirestore {
         return FirebaseFirestore.getInstance()
     }
 
@@ -409,7 +413,7 @@ class SendMoneyViewModel(private val sharedPreferencesShowTokens:SharedPreferenc
 
 
 
-     fun subtractTokensFromSender(uid: String, tokensToSubtract: Int): Task<Void> {
+    fun subtractTokensFromSender(uid: String, tokensToSubtract: Int): Task<Void> {
         db.collection("users").document(recipient.value.toString())
             .update("tokens", FieldValue.increment(tokensToSubtract.toLong()))
 
@@ -530,7 +534,3 @@ class SendMoneyViewModel(private val sharedPreferencesShowTokens:SharedPreferenc
         db.collection("users").document(currentUser!!.email.toString()).delete()
     }
 }
-
-
-
-

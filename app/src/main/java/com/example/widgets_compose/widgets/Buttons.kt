@@ -182,7 +182,8 @@ fun TokensToSendWrittingButton(label: String, viewModel: SendMoneyViewModel) {
                 viewModel.setTokensToSend(newValue.toInt())
                 viewModel.tokensToSendInput = newValue.toInt()
             } else if (newValue.isEmpty()) {
-                null
+                viewModel.setTokensToSend(0)
+                viewModel.tokensToSendInput = 0
             }
         },
         singleLine = true,

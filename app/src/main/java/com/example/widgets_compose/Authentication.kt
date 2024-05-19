@@ -62,7 +62,7 @@ fun onSignInResult(result: FirebaseAuthUIAuthenticationResult, activity: MainAct
                         "tokens" to 0,
                         "location" to userLocation,
                         "fcmToken" to 0,
-                        "transactions" to listOf<Map<String, Any>>()
+                        "transactions" to listOf<Map<String, Any>>(),
                     )
 
                     userRef.set(user).addOnSuccessListener {
