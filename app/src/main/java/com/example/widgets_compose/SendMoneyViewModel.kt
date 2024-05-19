@@ -1,8 +1,8 @@
-
 package com.example.widgets_compose
 
 import android.media.MediaPlayer
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -62,6 +62,10 @@ class SendMoneyViewModel(private val sharedPreferencesShowTokens:SharedPreferenc
     private val storage: FirebaseStorage = FirebaseStorage.getInstance()
     private lateinit var mediaPlayer: MediaPlayer
     val isPlaying = MutableLiveData<Boolean>(false)
+    private val _isEmailValid = MutableLiveData<Boolean>(false)
+    private val _isEmailValidLocation = MutableLiveData<Boolean>(false)
+    val isEmailValid: LiveData<Boolean> get() = _isEmailValid
+    val isEmailValidLocation: LiveData<Boolean> get() = _isEmailValidLocation
 
 
     private val db = FirebaseFirestore.getInstance()
@@ -251,6 +255,19 @@ class SendMoneyViewModel(private val sharedPreferencesShowTokens:SharedPreferenc
 
     fun setOtherUserEmail(value: String) {
         otherUserEmail.value = value
+        checkEmailExists(value)
+    }
+
+    private fun checkEmailExists(email: String) {
+        db.collection("users")
+            .whereEqualTo("email", email)
+            .get()
+            .addOnSuccessListener { documents ->
+                _isEmailValid.value = !documents.isEmpty
+            }
+            .addOnFailureListener {
+                _isEmailValid.value = false
+            }
     }
 
     fun showSignOutDialogue(show: Boolean) {
@@ -280,6 +297,19 @@ class SendMoneyViewModel(private val sharedPreferencesShowTokens:SharedPreferenc
 
     fun setRecipient(recipienT: String) {
         recipient.value = recipienT
+        checkEmailExistsLocation(recipienT)
+    }
+
+    private fun checkEmailExistsLocation(email: String) {
+        db.collection("users")
+            .whereEqualTo("email", email)
+            .get()
+            .addOnSuccessListener { documents ->
+                _isEmailValidLocation.value = !documents.isEmpty
+            }
+            .addOnFailureListener {
+                _isEmailValidLocation.value = false
+            }
     }
 
     fun changeRecipientValidity(valid: Boolean) {
@@ -292,7 +322,7 @@ class SendMoneyViewModel(private val sharedPreferencesShowTokens:SharedPreferenc
 
 
 
-    fun getDatabase () : FirebaseFirestore {
+   fun getDatabase () : FirebaseFirestore {
         return FirebaseFirestore.getInstance()
     }
 
@@ -379,7 +409,7 @@ class SendMoneyViewModel(private val sharedPreferencesShowTokens:SharedPreferenc
 
 
 
-    fun subtractTokensFromSender(uid: String, tokensToSubtract: Int): Task<Void> {
+     fun subtractTokensFromSender(uid: String, tokensToSubtract: Int): Task<Void> {
         db.collection("users").document(recipient.value.toString())
             .update("tokens", FieldValue.increment(tokensToSubtract.toLong()))
 
@@ -499,5 +529,8 @@ class SendMoneyViewModel(private val sharedPreferencesShowTokens:SharedPreferenc
         val db = FirebaseFirestore.getInstance()
         db.collection("users").document(currentUser!!.email.toString()).delete()
     }
-
 }
+
+
+
+

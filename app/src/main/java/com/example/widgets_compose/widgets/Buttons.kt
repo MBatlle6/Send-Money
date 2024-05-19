@@ -17,6 +17,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
@@ -198,6 +200,7 @@ fun TokensToSendWrittingButton(label: String, viewModel: SendMoneyViewModel) {
 
 @Composable
 fun SendTokensButton(label: String, viewModel: SendMoneyViewModel) {
+    val isRecipientEmailValid by viewModel.isEmailValidLocation.observeAsState(false)
     Button(
         colors = ButtonDefaults.buttonColors(Turquoise),
         onClick = {
@@ -209,7 +212,8 @@ fun SendTokensButton(label: String, viewModel: SendMoneyViewModel) {
                 viewModel.changeValidityTokensToSend(true)
                 viewModel.showSendDialogue(true)
             }
-        }
+        },
+        enabled = isRecipientEmailValid
     ) {
         Text(
             fontWeight = FontWeight.Bold,

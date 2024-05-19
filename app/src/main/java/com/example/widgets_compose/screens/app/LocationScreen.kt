@@ -21,6 +21,11 @@ import androidx.compose.material3.Text
 import com.example.widgets_compose.R
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,6 +51,8 @@ fun LocationScreen(
     viewModel: SendMoneyViewModel,
     activity: MainActivity
 ) {
+    val isEmailValid by viewModel.isEmailValid.observeAsState(false)
+
     if(viewModel.currentLocation.value!!) {
         UserCurrentLocation(viewModel = viewModel, activity = activity)
         return
@@ -91,6 +98,7 @@ fun LocationScreen(
                 onClick = {
                     viewModel.showOtherUserLocation(true)
                           },
+                enabled = isEmailValid,
                 colors = ButtonDefaults.buttonColors(Turquoise)
             )
             {
@@ -115,7 +123,6 @@ fun LocationScreen(
                 Spacer(modifier = Modifier.height(24.dp))
                 Button(
                     onClick = { viewModel.showPreviousLocation(true) },
-                    //colors = ButtonDefaults.buttonColors(Color.Black)
 
                     ) {
                     Icon(
