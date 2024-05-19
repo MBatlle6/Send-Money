@@ -1,5 +1,6 @@
 package com.example.widgets_compose
 
+import android.media.MediaPlayer
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,6 +11,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
+import com.google.firebase.storage.FirebaseStorage
+import java.io.File
 import java.time.LocalDate
 
 @Suppress("UNREACHABLE_CODE", "DEPRECATION")
@@ -55,6 +58,9 @@ class SendMoneyViewModel(private val sharedPreferencesShowTokens:SharedPreferenc
     val transactionTokens = MutableLiveData(true)
     val transactionDates = MutableLiveData(true)
     val resetPasswordEmailDialogue = MutableLiveData(false)
+    private val storage: FirebaseStorage = FirebaseStorage.getInstance()
+    private lateinit var mediaPlayer: MediaPlayer
+    val isPlaying = MutableLiveData<Boolean>(false)
 
 
     private val db = FirebaseFirestore.getInstance()
@@ -136,6 +142,31 @@ class SendMoneyViewModel(private val sharedPreferencesShowTokens:SharedPreferenc
             }
     }
 
+    fun playSound() {
+        val audioRef = storage.reference.child("coin_sound.mp3")
+
+        val localFile = File.createTempFile("tempSound", "mp3")
+        audioRef.getFile(localFile).addOnSuccessListener {
+            mediaPlayer = MediaPlayer().apply {
+                setDataSource(localFile.absolutePath)
+                prepare()
+                start()
+                setOnCompletionListener {
+                    release()
+                }
+            }
+        }.addOnFailureListener { exception ->
+            Log.e("Firebase", "Error al descargar el archivo", exception)
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        if (this::mediaPlayer.isInitialized && mediaPlayer.isPlaying) {
+            mediaPlayer.stop()
+            mediaPlayer.release()
+        }
+    }
 
 
     fun showTransactionTokens(show: Boolean) {

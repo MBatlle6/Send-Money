@@ -50,6 +50,7 @@ fun BuyDialogue(viewModel: SendMoneyViewModel, activity: MainActivity){
         confirmButton = {
             TextButton(
                 onClick = {
+                    viewModel.playSound()
                     viewModel.showBuyDialogue(false)
                     viewModel.addTransaction(
                         Transaction(activity.getString(R.string.bank), activity.getString(R.string.me),
@@ -84,6 +85,7 @@ fun SellDialogue(viewModel: SendMoneyViewModel, activity: MainActivity){
         confirmButton = {
             TextButton(
                 onClick = {
+                    viewModel.playSound()
                     viewModel.showSellDialogue(false)
                     viewModel.addTransaction(
                         Transaction(activity.getString(R.string.me), activity.getString(R.string.bank),
@@ -119,6 +121,7 @@ fun SendDialogue(viewModel: SendMoneyViewModel, activity: MainActivity){
         confirmButton = {
             TextButton(
                 onClick = {
+                    viewModel.playSound()
                     viewModel.showSendDialogue(false)
                     viewModel.addTransaction(
                         Transaction(activity.getString(R.string.me), viewModel.recipient.value!!,

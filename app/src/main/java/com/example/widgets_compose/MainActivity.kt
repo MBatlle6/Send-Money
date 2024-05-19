@@ -37,6 +37,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.Firebase
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.messaging
 import kotlinx.coroutines.delay
@@ -103,20 +104,9 @@ class MainActivity : ComponentActivity() {
         viewModel.getShowTransactionTokens()
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+        FirebaseApp.initializeApp(this)
 
-        /*
-        // Create channel to show notifications.
-        val channelId = getString(R.string.default_notification_channel_id)
-        val channelName = "Default"
-        val notificationManager = getSystemService(NotificationManager::class.java)
-        notificationManager?.createNotificationChannel(
-            NotificationChannel(
-                channelId,
-                channelName,
-                NotificationManager.IMPORTANCE_LOW,
-            ),
-        )
-         */
+
 
         intent.extras?.let {
             for (key in it.keySet()) {

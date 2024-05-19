@@ -57,5 +57,6 @@ fun BuyScreen(
         Spacer(modifier = Modifier.size(30.dp))
         TokensToSellWrittingButton(label = activity.getString(R.string.sell_tokens), viewModel = viewModel)
         SellTokensButton(label = activity.getString(R.string.sell_tokens), viewModel = viewModel)
+
     }
 }
