@@ -1,3 +1,4 @@
+
 package com.example.widgets_compose
 
 import android.media.MediaPlayer
@@ -51,7 +52,7 @@ class SendMoneyViewModel(private val sharedPreferencesShowTokens:SharedPreferenc
     val isLogged = MutableLiveData(false)
     val signOutDialogue = MutableLiveData(false)
     val deleteAccountDialogue = MutableLiveData(false)
-    val otherUserEmail = MutableLiveData<String>()
+    val otherUserEmail = MutableLiveData<String>("")
     val currentLocation = MutableLiveData(false)
     val previousLocation = MutableLiveData(false)
     val otherUserLocation = MutableLiveData(false)
@@ -291,7 +292,7 @@ class SendMoneyViewModel(private val sharedPreferencesShowTokens:SharedPreferenc
 
 
 
-   fun getDatabase () : FirebaseFirestore {
+    fun getDatabase () : FirebaseFirestore {
         return FirebaseFirestore.getInstance()
     }
 
@@ -378,7 +379,7 @@ class SendMoneyViewModel(private val sharedPreferencesShowTokens:SharedPreferenc
 
 
 
-     fun subtractTokensFromSender(uid: String, tokensToSubtract: Int): Task<Void> {
+    fun subtractTokensFromSender(uid: String, tokensToSubtract: Int): Task<Void> {
         db.collection("users").document(recipient.value.toString())
             .update("tokens", FieldValue.increment(tokensToSubtract.toLong()))
 
@@ -500,7 +501,3 @@ class SendMoneyViewModel(private val sharedPreferencesShowTokens:SharedPreferenc
     }
 
 }
-
-
-
-

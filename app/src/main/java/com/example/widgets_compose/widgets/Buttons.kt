@@ -222,7 +222,6 @@ fun SendTokensButton(label: String, viewModel: SendMoneyViewModel) {
 fun OtherUserEmailWritingButton(label: String, viewModel: SendMoneyViewModel) {
     val focusManager = LocalFocusManager.current
     OutlinedTextField(
-        //Afegir isError en la fase del Firebase
         leadingIcon = {
             Icon(imageVector = Icons.Filled.Email, contentDescription = "")
         },
