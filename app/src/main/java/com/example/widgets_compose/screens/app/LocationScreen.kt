@@ -1,40 +1,29 @@
 package com.example.widgets_compose.screens.app
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.clickable
+import android.os.Handler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import com.example.widgets_compose.R
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.widgets_compose.MainActivity
+import com.example.widgets_compose.R
 import com.example.widgets_compose.SendMoneyViewModel
-import com.example.widgets_compose.SharedPreferencesData
 import com.example.widgets_compose.ui.theme.Turquoise
 import com.example.widgets_compose.widgets.OtherUserEmailWritingButton
 import com.google.android.gms.maps.model.CameraPosition
@@ -55,10 +44,6 @@ fun LocationScreen(
 
     if(viewModel.currentLocation.value!!) {
         UserCurrentLocation(viewModel = viewModel, activity = activity)
-        return
-    }
-    if(viewModel.previousLocation.value!!) {
-        UserPreviousLocation(viewModel = viewModel, activity = activity)
         return
     }
     if(viewModel.otherUserLocation.value!!) {
@@ -120,47 +105,10 @@ fun LocationScreen(
                     )
                     Text(text = activity.getString(R.string.currentLocation))
                 }
-                Spacer(modifier = Modifier.height(24.dp))
-                Button(
-                    onClick = { viewModel.showPreviousLocation(true) },
-
-                    ) {
-                    Icon(
-                        Icons.Filled.LocationOn,
-                        contentDescription = "Localized description",
-                        modifier = Modifier.size(32.dp)
-                    )
-                    Text(text = activity.getString(R.string.previousLocation))
-                }
-
             }
         }
     }
 }
-
-
-//Make UserPreviousLocation() retrieve the previus location of the user, stored on the Shared Preferences
-@Composable
-fun UserPreviousLocation(viewModel: SendMoneyViewModel, activity: MainActivity){
-    val myLocation = LatLng(viewModel.userLatitude.value!!, viewModel.userLongitude.value!!)
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(myLocation, 10f)
-    }
-    GoogleMap(
-        modifier = Modifier.fillMaxSize(),
-        cameraPositionState = cameraPositionState,
-        uiSettings = MapUiSettings(zoomControlsEnabled = false),
-    ) {
-        Marker(
-            state = MarkerState(position = myLocation),
-            title = activity.getString(R.string.myLocation),
-        )
-    }
-}
-
-
-
-
 
 @Composable
 fun UserCurrentLocation(viewModel: SendMoneyViewModel, activity: MainActivity){
