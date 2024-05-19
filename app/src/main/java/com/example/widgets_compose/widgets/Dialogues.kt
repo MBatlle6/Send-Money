@@ -127,7 +127,10 @@ fun SendDialogue(viewModel: SendMoneyViewModel, activity: MainActivity){
                         Transaction(activity.getString(R.string.me), viewModel.recipient.value!!,
                             LocalDate.now(), viewModel.tokens_to_send.value!!)
                     )
-                    viewModel.sendTokens()
+                    viewModel.sendTokens(
+                        Transaction(viewModel.getCurrentUser()!!.email.toString(), viewModel.recipient.value!!,
+                            LocalDate.now(), viewModel.tokens_to_send.value!!)
+                    )
                     viewModel.setTokensToSend(0)
                     viewModel.setRecipient("")
                     backAction(viewModel)
